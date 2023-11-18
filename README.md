@@ -4,6 +4,8 @@
 https://docs.docker.com/desktop/install/windows-install/
 ### 1.1.2 Bộ công cụ phát triển Java JDK-21 (bản window)
 https://download.oracle.com/java/21/latest/jdk-21_windows-x64_bin.exe
+### 1.1.3 Nodejs Version: 20.9.0 (includes npm 10.1.0)
+https://nodejs.org/en/download/
 ## 1.2 Config project
 ### 1.2.1 Kiểm tra đường dẫn thư mục JDK vừa cài bước 1.2  trong file .vscode/settings.json
 ```
