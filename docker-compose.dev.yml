@@ -1,0 +1,46 @@
+version: "3.9"
+
+services:
+  database:
+    image: postgres:15.2
+    restart: always
+    environment:
+      POSTGRES_DB: $DB_NAME
+      POSTGRES_USER: $DB_USER
+      POSTGRES_PASSWORD: $DB_PASSWORD
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+    volumes:
+      - volume_postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: pg_isready -U postgres
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    ports:
+      - 80:80
+    volumes:
+      - volume_pgadmin:/var/lib/pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    depends_on:
+      - database
+  graphql-engine:
+    image: hasura/graphql-engine:v2.35.1
+    restart: always
+    environment:
+      HASURA_GRAPHQL_MIGRATIONS_DIR: /graphql-engine/migration
+      HASURA_GRAPHQL_METADATA_DIR: /graphql-engine/metadata
+      HASURA_GRAPHQL_EXPERIMENTAL_FEATURES: naming_convention
+      HASURA_GRAPHQL_METADATA_DATABASE_URL: "postgres://${DB_USER}:${DB_PASSWORD}@database:${DB_PORT}/${DB_NAME}"
+      HASURA_GRAPHQL_ADMIN_SECRET: $HASURA_GRAPHQL_ADMIN_SECRET
+      HASURA_GRAPHQL_ENABLE_CONSOLE: true
+      HASURA_GRAPHQL_DEV_MODE: true
+    ports:
+      - "8888:8080"
+    depends_on:
+      database:
+        condition: service_healthy
+volumes:
+  volume_postgres:
+  volume_pgadmin:
