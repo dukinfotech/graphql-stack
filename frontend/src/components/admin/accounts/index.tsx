@@ -8,12 +8,12 @@ import { TrashIcon } from "@/components/icons/accounts/trash-icon";
 import { HouseIcon } from "@/components/icons/breadcrumb/house-icon";
 import { UsersIcon } from "@/components/icons/breadcrumb/users-icon";
 import { SettingsIcon } from "@/components/icons/sidebar/settings-icon";
-import { TableWrapper } from "../table/table";
+import { TableWrapper } from "@/components/admin/table/table";
 import { AddUser } from "./add-user";
 
 export const Accounts = () => {
   return (
-    <div className="my-14 max-w-[95rem] mx-auto w-full flex flex-col gap-4">
+    <section className="my-14 max-w-[95rem] mx-auto w-full flex flex-col gap-4">
       <ul className="flex">
         <li className="flex gap-2">
           <HouseIcon />
@@ -58,6 +58,6 @@ export const Accounts = () => {
       <div className="max-w-[95rem] mx-auto w-full">
         <TableWrapper />
       </div>
-    </div>
+    </section>
   );
 };
