@@ -21,7 +21,11 @@ cp .env.example .env
 ```
 docker-compose -f docker-compose.dev.yml up --build -d
 ```
-### 1.3.3 Khởi động Frontend, Backend
+### 1.3.3 Cài đặt node_modules (cả thư mục frontend và thư mục graphql-engine)
+```
+npm install
+```
+### 1.3.4 Khởi động Frontend, Backend
 > Sử dụng chức năng "Run and Debug" trên VSCode
 # 2. Hướng dẫn triển khai môi trường Production
 ## 2.1 Cài đặt phần mềm

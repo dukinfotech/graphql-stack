@@ -1,0 +1,17 @@
+{
+  "name": "graphql-engine",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "hasura": "hasura --project hasura --skip-update-check",
+    "hasura:migrate-apply": "dotenv -e ../.env npm run hasura migrate apply",
+    "hasura:export-metadata": "dotenv -e ../.env npm run hasura metadata export"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "dotenv-cli": "^7.3.0",
+    "hasura-cli": "^2.35.1"
+  }
+}

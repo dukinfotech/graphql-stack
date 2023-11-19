@@ -1,0 +1,6 @@
+- "!include public_permissions.yaml"
+- "!include public_role_permission.yaml"
+- "!include public_roles.yaml"
+- "!include public_user_permission.yaml"
+- "!include public_user_role.yaml"
+- "!include public_users.yaml"
