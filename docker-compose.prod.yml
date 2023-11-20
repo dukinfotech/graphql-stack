@@ -15,8 +15,8 @@ services:
       - volume_postgres:/var/lib/postgresql/data
     healthcheck:
       test: pg_isready -U postgres
-  graphql-engine:
-    container_name: graphql-engine
+  hasura:
+    container_name: hasura
     image: hasura/graphql-engine:v2.35.1
     restart: always
     environment:

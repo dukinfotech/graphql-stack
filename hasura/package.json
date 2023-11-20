@@ -1,0 +1,14 @@
+{
+  "name": "graphql-engine",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "hasura": "hasura --project hasura --skip-update-check",
+    "hasura:migrate-init": "hasura migrate create \"init\" --from-server --admin-secret=undersecretary",
+    "hasura:migrate-apply": "hasura migrate apply --admin-secret=undersecretary",
+    "hasura:export-metadata": "hasura metadata export --admin-secret=undersecretary"
+  },
+  "author": "",
+  "license": "ISC"
+}

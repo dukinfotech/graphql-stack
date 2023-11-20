@@ -6,6 +6,8 @@ https://docs.docker.com/desktop/install/windows-install/
 https://download.oracle.com/java/21/latest/jdk-21_windows-x64_bin.exe
 ### 1.1.3 Nodejs Version: 20.9.0 (includes npm 10.1.0)
 https://nodejs.org/en/download/
+### 1.2.3 Hasura CLI (bản Window)
+https://hasura.io/docs/latest/hasura-cli/install-hasura-cli/
 ## 1.2 Config project
 ### 1.2.1 Kiểm tra đường dẫn thư mục JDK vừa cài bước 1.2  trong file .vscode/settings.json
 ```
@@ -21,7 +23,7 @@ cp .env.example .env
 ```
 docker-compose -f docker-compose.dev.yml up --build -d
 ```
-### 1.3.3 Cài đặt node_modules (cả thư mục frontend và thư mục graphql-engine)
+### 1.3.3 Cài đặt node_modules (thư mục frontend)
 ```
 npm install
 ```
