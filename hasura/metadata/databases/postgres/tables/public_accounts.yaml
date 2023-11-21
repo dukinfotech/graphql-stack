@@ -1,16 +1,7 @@
 table:
-  name: user_role
+  name: accounts
   schema: public
 object_relationships:
-  - name: role
-    using:
-      manual_configuration:
-        column_mapping:
-          role_id: id
-        insertion_order: null
-        remote_table:
-          name: roles
-          schema: public
   - name: user
     using:
       manual_configuration:

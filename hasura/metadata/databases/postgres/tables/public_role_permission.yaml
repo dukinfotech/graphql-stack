@@ -1,3 +1,22 @@
 table:
   name: role_permission
   schema: public
+object_relationships:
+  - name: permission
+    using:
+      manual_configuration:
+        column_mapping:
+          permission_id: id
+        insertion_order: null
+        remote_table:
+          name: permissions
+          schema: public
+  - name: role
+    using:
+      manual_configuration:
+        column_mapping:
+          role_id: id
+        insertion_order: null
+        remote_table:
+          name: roles
+          schema: public
