@@ -100,3 +100,17 @@ ALTER TABLE ONLY public.roles
     ADD CONSTRAINT roles_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.accounts
+    ADD CONSTRAINT accounts_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
+ALTER TABLE ONLY public.role_permission
+    ADD CONSTRAINT role_permission_permission_id_fkey FOREIGN KEY (permission_id) REFERENCES public.permissions(id);
+ALTER TABLE ONLY public.role_permission
+    ADD CONSTRAINT role_permission_role_id_fkey FOREIGN KEY (role_id) REFERENCES public.roles(id);
+ALTER TABLE ONLY public.user_permission
+    ADD CONSTRAINT user_permission_permission_id_fkey FOREIGN KEY (permission_id) REFERENCES public.permissions(id);
+ALTER TABLE ONLY public.user_permission
+    ADD CONSTRAINT user_permission_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
+ALTER TABLE ONLY public.user_role
+    ADD CONSTRAINT user_role_role_id_fkey FOREIGN KEY (role_id) REFERENCES public.roles(id);
+ALTER TABLE ONLY public.user_role
+    ADD CONSTRAINT user_role_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
