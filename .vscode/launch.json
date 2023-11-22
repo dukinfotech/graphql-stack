@@ -8,22 +8,21 @@
       "type": "node",
       "request": "launch",
       "name": "Start Frontend",
-      "runtimeExecutable": "npm",
+      "runtimeExecutable": "yarn",
       "cwd": "${workspaceFolder}/frontend",
       "runtimeArgs": [
-        "run",
         "dev"
       ]
     },
     {
-      "type": "java",
-      "name": "Start Backend",
+      "type": "node",
       "request": "launch",
-      "cwd": "${workspaceFolder}",
-      "mainClass": "com.example.backend.BackendApplication",
-      "projectName": "backend",
-      "args": "",
-      "envFile": "${workspaceFolder}/.env"
-    }
+      "name": "Start Backend",
+      "runtimeExecutable": "yarn",
+      "cwd": "${workspaceFolder}/backend",
+      "runtimeArgs": [
+        "start:dev"
+      ]
+    },
   ]
 }
