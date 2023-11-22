@@ -6,6 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "typeorm-model-generator": "npx typeorm-model-generator -h host.docker.internal -d postgres -u postgres -x password -p 5432 -e postgres -o ./src -s public",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
@@ -24,8 +25,11 @@
     "@nestjs/core": "^10.0.0",
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/platform-fastify": "^10.2.10",
+    "@nestjs/typeorm": "^10.0.1",
+    "pg": "^8.11.3",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "typeorm": "^0.3.17"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
@@ -48,6 +52,7 @@
     "ts-loader": "^9.4.3",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.2.0",
+    "typeorm-model-generator": "^0.4.6",
     "typescript": "^5.1.3"
   },
   "jest": {
