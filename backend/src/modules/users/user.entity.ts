@@ -1,6 +1,14 @@
-import { Column, Entity, Index, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Role } from "../roles/role.entity";
-import { Permission } from "../permissions/permission.entity";
+import {
+  Column,
+  Entity,
+  Index,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
+import { UserPermission } from "./user_permission.entity";
+import { UserRole } from "./user_role.entity";
+import { Account } from "../accounts/account.entity";
 
 @Index("users_pkey", ["id"], { unique: true })
 @Entity("users", { schema: "public" })
@@ -49,11 +57,12 @@ export class User {
   @Column("timestamp with time zone", { name: "deleted_at", nullable: true })
   deletedAt: Date | null;
 
-  @ManyToMany(() => Role)
-  @JoinTable()
-  roles: Role[]
+  @OneToOne(() => Account, (account) => account.user)
+  account: Account;
 
-  @ManyToMany(() => Permission)
-  @JoinTable()
-  permissions: Permission[]
+  @OneToMany(() => UserPermission, (userPermission) => userPermission.user)
+  userPermissions: UserPermission[];
+
+  @OneToMany(() => UserRole, (userRole) => userRole.user)
+  userRoles: UserRole[];
 }

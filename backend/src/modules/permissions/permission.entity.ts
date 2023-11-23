@@ -1,4 +1,12 @@
-import { Column, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  Index,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
+import { UserPermission } from "../users/user_permission.entity.js";
+import { RolePermission } from "../roles/role_permission.entity.js";
 
 @Index("permissions_pkey", ["id"], { unique: true })
 @Index("permissions_value_key", ["value"], { unique: true })
@@ -19,4 +27,16 @@ export class Permission {
     default: () => "now()",
   })
   createdAt: Date | null;
+
+  @OneToMany(
+    () => RolePermission,
+    (rolePermission) => rolePermission.permission
+  )
+  rolePermissions: RolePermission[];
+
+  @OneToMany(
+    () => UserPermission,
+    (userPermission) => userPermission.permission
+  )
+  userPermissions: UserPermission[];
 }

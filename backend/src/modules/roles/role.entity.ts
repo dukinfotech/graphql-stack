@@ -1,5 +1,12 @@
-import { Column, Entity, Index, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Permission } from "../permissions/permission.entity";
+import {
+  Column,
+  Entity,
+  Index,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
+import { UserRole } from "../users/user_role.entity.js";
+import { RolePermission } from "./role_permission.entity.js";
 
 @Index("roles_pkey", ["id"], { unique: true })
 @Entity("roles", { schema: "public" })
@@ -27,7 +34,9 @@ export class Role {
   @Column("timestamp with time zone", { name: "deleted_at", nullable: true })
   deletedAt: Date | null;
 
-  @ManyToMany(() => Permission)
-  @JoinTable()
-  permissions: Permission[]
+  @OneToMany(() => RolePermission, (rolePermission) => rolePermission.role)
+  rolePermissions: RolePermission[];
+
+  @OneToMany(() => UserRole, (userRole) => userRole.role)
+  userRoles: UserRole[];
 }

@@ -1,4 +1,11 @@
-import { Column, Entity, Index, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { User } from "../users/user.entity";
 
 @Index("accounts_email_key", ["email"], { unique: true })
@@ -63,7 +70,7 @@ export class Account {
   @Column("timestamp with time zone", { name: "deleted_at", nullable: true })
   deletedAt: Date | null;
 
-  @OneToOne(() => User)
-  @JoinColumn()
-  user: User
+  @OneToOne(() => User, (user) => user.account)
+  @JoinColumn([{ name: "user_id", referencedColumnName: "id" }])
+  user: User;
 }
