@@ -27,6 +27,7 @@ import { AppResolver } from './app.resover';
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), "src/schema.gql"),
       sortSchema: true,
+      playground: false
     }),
     UsersModule,
     AccountsModule,
@@ -36,4 +37,4 @@ import { AppResolver } from './app.resover';
   controllers: [AppController],
   providers: [AppService, AppResolver],
 })
-export class AppModule {}
+export class AppModule { }
