@@ -6,25 +6,25 @@ import { UsersModule } from './modules/users/users.module';
 import { AccountsModule } from './modules/accounts/accounts.module';
 import { RolesModule } from './modules/roles/roles.module';
 import { PermissionsModule } from './modules/permissions/permissions.module';
+import { ConfigModule } from '@nestjs/config';
+import { DatabaseConfig } from './config/database.config';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'host.docker.internal',
-      port: 5432,
-      username: 'postgres',
-      password: 'password',
-      database: 'postgres',
-      synchronize: false, // Shouldn't be used in production
-      autoLoadEntities: true
+    ConfigModule.forRoot({
+      ignoreEnvFile: true,
+      isGlobal: true,
+      cache: true
+    }),
+    TypeOrmModule.forRootAsync({
+      useClass: DatabaseConfig,
     }),
     UsersModule,
     AccountsModule,
     RolesModule,
-    PermissionsModule
+    PermissionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

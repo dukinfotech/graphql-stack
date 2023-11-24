@@ -10,9 +10,11 @@
       "name": "Start Frontend",
       "runtimeExecutable": "yarn",
       "cwd": "${workspaceFolder}/frontend",
+      "outputCapture": "std",
       "runtimeArgs": [
         "dev"
-      ]
+      ],
+      "envFile": "${workspaceFolder}/.env",
     },
     {
       "type": "node",
@@ -20,9 +22,11 @@
       "name": "Start Backend",
       "runtimeExecutable": "yarn",
       "cwd": "${workspaceFolder}/backend",
+      "outputCapture": "std",
       "runtimeArgs": [
         "start:dev"
-      ]
+      ],
+      "envFile": "${workspaceFolder}/.env",
     },
   ]
 }
