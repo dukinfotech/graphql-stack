@@ -8,7 +8,7 @@ export class AppController {
   ) { }
 
   @Get()
-  getHello(): string {
+  showEnv(): string {
     const env = this.configService.get<string>('NODE_ENV') || "development";
     return `Running environment: ${env}`
   }
