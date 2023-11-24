@@ -32,6 +32,8 @@ services:
     image: hasura/graphql-engine:v2.35.1
     restart: always
     environment:
+      REMOTE_SCHEMA_ENDPOINT: http://host.docker.internal:3001/graphql
+      HASURA_GRAPHQL_ENABLE_REMOTE_SCHEMA_PERMISSIONS: true
       HASURA_GRAPHQL_MIGRATIONS_DIR: /graphql-engine/migration
       HASURA_GRAPHQL_METADATA_DIR: /graphql-engine/metadata
       HASURA_GRAPHQL_EXPERIMENTAL_FEATURES: naming_convention

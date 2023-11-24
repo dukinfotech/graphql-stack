@@ -4,29 +4,23 @@ table:
 object_relationships:
   - name: account
     using:
-      manual_configuration:
-        column_mapping:
-          id: user_id
-        insertion_order: null
-        remote_table:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
           name: accounts
           schema: public
 array_relationships:
   - name: user_permissions
     using:
-      manual_configuration:
-        column_mapping:
-          id: user_id
-        insertion_order: null
-        remote_table:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
           name: user_permission
           schema: public
   - name: user_roles
     using:
-      manual_configuration:
-        column_mapping:
-          id: role_id
-        insertion_order: null
-        remote_table:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
           name: user_role
           schema: public

@@ -4,19 +4,7 @@ table:
 object_relationships:
   - name: permission
     using:
-      manual_configuration:
-        column_mapping:
-          permission_id: id
-        insertion_order: null
-        remote_table:
-          name: permissions
-          schema: public
+      foreign_key_constraint_on: permission_id
   - name: user
     using:
-      manual_configuration:
-        column_mapping:
-          user_id: id
-        insertion_order: null
-        remote_table:
-          name: users
-          schema: public
+      foreign_key_constraint_on: user_id

@@ -1,1 +1,7 @@
-[]
+- name: backend
+  definition:
+    url: '{{REMOTE_SCHEMA_ENDPOINT}}'
+    timeout_seconds: 60
+    customization: {}
+    forward_client_headers: true
+  comment: Customized queries and mutations from Apollo Server (Nestjs)
