@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GraphQLModule } from '@nestjs/graphql';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -23,11 +23,15 @@ import { AppResolver } from './app.resover';
     TypeOrmModule.forRootAsync({
       useClass: DatabaseConfig,
     }),
-    GraphQLModule.forRoot<ApolloDriverConfig>({
+    GraphQLModule.forRootAsync<ApolloDriverConfig>({
+      imports: [ConfigModule],
       driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), "src/schema.gql"),
-      sortSchema: true,
-      playground: false
+      useFactory: async (configService: ConfigService) => ({
+        autoSchemaFile: join(process.cwd(), "src/schema.gql"),
+        sortSchema: true,
+        playground: configService.get<string>("NODE_ENV") !== "production"
+      }),
+      inject: [ConfigService]
     }),
     UsersModule,
     AccountsModule,
