@@ -45,7 +45,7 @@ services:
       DB_USER: $DB_USER
       DB_PASSWORD: $DB_PASSWORD
     ports:
-      - "8080:8080"
+      - "3001:3001"
 volumes:
   volume_postgres:
   volume_pgadmin:
