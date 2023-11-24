@@ -32,6 +32,14 @@ services:
     depends_on:
       database:
         condition: service_healthy
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "3000:3000"
   backend:
     container_name: backend
     build:
