@@ -16,7 +16,7 @@ import { PermissionsModule } from './modules/permissions/permissions.module';
       username: 'postgres',
       password: 'password',
       database: 'postgres',
-      synchronize: true, // Shouldn't be used in production
+      synchronize: false, // Shouldn't be used in production
       autoLoadEntities: true
     }),
     UsersModule,
