@@ -1,22 +1,15 @@
 import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
-import { UsersService } from './modules/users/users.service';
-import { User } from './modules/users/user.entity';
+import { ConfigService } from '@nestjs/config';
 
 @Controller()
 export class AppController {
   constructor(
-    private readonly appService: AppService,
-    private readonly userService: UsersService
+    private readonly configService: ConfigService
   ) { }
 
   @Get()
   getHello(): string {
-    return this.appService.getHello();
-  }
-
-  @Get("users")
-  async getUsers(): Promise<User[]> {
-    return this.userService.findAll();
+    const env = this.configService.get<string>('NODE_ENV') || "development";
+    return `Running environment: ${env}`
   }
 }
