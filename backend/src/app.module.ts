@@ -11,7 +11,7 @@ import { RolesModule } from './modules/roles/roles.module';
 import { PermissionsModule } from './modules/permissions/permissions.module';
 import { DatabaseConfig } from './config/database.config';
 import { join } from 'path';
-import { AppResolver } from './app.resover';
+import { AppResolver } from './app.resolver';
 import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
