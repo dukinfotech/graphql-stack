@@ -18,6 +18,7 @@ services:
   pgadmin:
     container_name: pgadmin
     image: dpage/pgadmin4:latest
+    restart: always
     ports:
       - 80:80
     volumes:
