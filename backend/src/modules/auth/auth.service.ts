@@ -30,6 +30,13 @@ export class AuthService {
     throw new BadRequestException('Email or password is incorrect');
   }
 
+  async refreshTokens(userId: number) {
+    const account = await this.accountsService.findByUserId(userId);
+    const tokens = await this.generateJwtTokens(account.userId, account.email);
+    this.updateJwtTokens(account.userId, tokens.accessToken, tokens.refreshAccessToken);
+    return tokens;
+  }
+
   private async generateJwtTokens(userId: number, email: string) {
     const [accessToken, refreshAccessToken] = await Promise.all([
       this.jwtService.signAsync(
@@ -48,7 +55,7 @@ export class AuthService {
           email,
         },
         {
-          secret: this.configService.get<string>('JWT_SECRET'),
+          secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
           expiresIn: '180d',
         },
       ),

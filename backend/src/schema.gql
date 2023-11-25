@@ -30,8 +30,14 @@ type LoginOutput {
 
 type Mutation {
   login(loginInput: LoginInput!): LoginOutput!
+  refreshTokens: RefreshTokenOutput!
 }
 
 type Query {
   sayHello: String!
+}
+
+type RefreshTokenOutput {
+  accessToken: String!
+  refreshAccessToken: String!
 }

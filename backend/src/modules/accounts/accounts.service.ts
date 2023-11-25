@@ -17,12 +17,10 @@ export class AccountsService {
     return isMatch;
   }
 
-  async findByEmail(email: string): Promise<Account> {
-    const account = await this.accountsRepository.findOne({
-      where: { email },
-      relations: ['user']
-    })
-    return account;
+  async validateRefreshAccessToken(email: string, refreshAccessToken: string): Promise<boolean> {
+    const account = await this.accountsRepository.findOneBy({ email });
+    const isMatch = await bcrypt.compare(refreshAccessToken, account.hashedRefreshAccessToken);
+    return isMatch;
   }
 
   async updateJwtTokens(userId: number, hashedAccessToken: string, hashedRefreshAccessToken: string) {
@@ -32,5 +30,20 @@ export class AccountsService {
       hashedAccessToken,
       hashedRefreshAccessToken
     })
+  }
+
+  async findByEmail(email: string): Promise<Account> {
+    const account = await this.accountsRepository.findOne({
+      where: { email },
+      relations: ['user']
+    })
+    return account;
+  }
+
+  async findByUserId(userId: number): Promise<Account> {
+    const account = await this.accountsRepository.findOne({
+      where: { userId },
+    })
+    return account;
   }
 }
