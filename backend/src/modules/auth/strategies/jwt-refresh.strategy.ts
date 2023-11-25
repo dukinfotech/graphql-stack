@@ -25,7 +25,7 @@ export class JwtRefreshStrategy extends PassportStrategy(Strategy, 'jwt-refresh'
 
     const isValid = this.accountsService.validateRefreshAccessToken(email, refreshAccessToken);
     if (isValid) {
-      return { ...payload, refreshAccessToken }
+      return payload;
     }
     throw new UnauthorizedException();
   }
