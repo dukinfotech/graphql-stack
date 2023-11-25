@@ -28,5 +28,16 @@
       ],
       "envFile": "${workspaceFolder}/.env",
     },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Frontend: Graphql Codegen",
+      "runtimeExecutable": "yarn",
+      "cwd": "${workspaceFolder}/frontend",
+      "outputCapture": "std",
+      "runtimeArgs": [
+        "graphql-code-generate"
+      ]
+    },
   ]
 }

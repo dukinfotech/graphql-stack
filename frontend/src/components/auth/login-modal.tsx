@@ -6,12 +6,11 @@ import {
   ModalBody,
   ModalFooter,
   Button,
-  Checkbox,
   Input,
-  Link,
 } from "@nextui-org/react";
 import { MdMail, MdLock } from "react-icons/md";
 import { gql, useMutation } from "@apollo/client";
+import { LoginOutput } from "@/gql/graphql";
 
 const LOGIN_MUTATION = gql`
   mutation Login($email: String!, $password: String!) {
@@ -46,7 +45,7 @@ export default function LoginModal() {
     isRememberMe: false,
   });
 
-  const [login, { data: loginData, loading, error }] = useMutation(LOGIN_MUTATION);
+  const [login, { data: loginData, loading, error }] = useMutation<LoginOutput>(LOGIN_MUTATION);
 
   const validateEmail = (value: string) =>
     value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i);
