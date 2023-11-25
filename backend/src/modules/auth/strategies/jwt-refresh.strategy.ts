@@ -21,7 +21,7 @@ export class JwtRefreshStrategy extends PassportStrategy(Strategy, 'jwt-refresh'
   // Parse the JWT from incoming requests
   async validate(req: Request, payload: any) {
     const { email } = payload;
-    const refreshAccessToken = req.headers['Authorization'].split(' ')[1];
+    const refreshAccessToken = req.headers['authorization'].split(' ')[1];
 
     const isValid = this.accountsService.validateRefreshAccessToken(email, refreshAccessToken);
     if (isValid) {

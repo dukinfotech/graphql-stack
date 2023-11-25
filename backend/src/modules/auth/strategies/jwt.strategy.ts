@@ -23,7 +23,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   // Parse the JWT from incoming requests
   async validate(req: Request, payload: any) {
     const { email } = payload;
-    const accessToken = req.headers['Authorization'].split(' ')[1];
+    const accessToken = req.headers['authorization'].split(' ')[1];
 
     const isValid = this.accountsService.validateAccessToken(email, accessToken);
     if (isValid) {
