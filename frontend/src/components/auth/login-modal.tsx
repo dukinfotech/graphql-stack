@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Modal,
   ModalContent,
@@ -11,6 +11,27 @@ import {
   Link,
 } from "@nextui-org/react";
 import { MdMail, MdLock } from "react-icons/md";
+import { gql, useMutation } from "@apollo/client";
+
+const LOGIN_MUTATION = gql`
+  mutation Login($email: String!, $password: String!) {
+    login(loginInput: {email: $email, password: $password}) {
+      accessToken
+      refreshAccessToken
+      address
+      birthday
+      city
+      country
+      createdAt
+      district
+      firstName
+      id
+      lastName
+      phone
+      updatedAt
+    }
+  }
+`;
 
 type LoginForm = {
   email: string;
@@ -25,6 +46,8 @@ export default function LoginModal() {
     isRememberMe: false,
   });
 
+  const [login, { data: loginData, loading, error }] = useMutation(LOGIN_MUTATION);
+
   const validateEmail = (value: string) =>
     value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i);
 
@@ -37,6 +60,21 @@ export default function LoginModal() {
     return isEmailInvalid || !loginForm.email || !loginForm.password;
   }, [loginForm]);
 
+  const handleLogin = async () => {
+    await login({
+      variables: {
+        email: loginForm.email,
+        password: loginForm.password
+      }
+    })
+  }
+
+  useEffect(() => {
+    if (loginData) {
+      console.log(loginData);
+    }
+  }, [loginData]);
+
   return (
     <Modal defaultOpen isDismissable={false} hideCloseButton backdrop="blur">
       <ModalContent>
@@ -44,6 +82,7 @@ export default function LoginModal() {
         <ModalBody>
           <Input
             autoFocus
+            isDisabled={loading}
             endContent={
               <MdMail className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
             }
@@ -59,6 +98,7 @@ export default function LoginModal() {
             errorMessage={isEmailInvalid && "Please enter a valid email"}
           />
           <Input
+            isDisabled={loading}
             endContent={
               <MdLock className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
             }
@@ -71,7 +111,7 @@ export default function LoginModal() {
               setLoginForm({ ...loginForm, password: value })
             }
           />
-          <div className="flex py-2 px-1 justify-between">
+          {/* <div className="flex py-2 px-1 justify-between">
             <Checkbox
               className="text-small"
               isSelected={loginForm.isRememberMe}
@@ -84,10 +124,11 @@ export default function LoginModal() {
             <Link color="primary" href="#" size="sm">
               Forgot password?
             </Link>
-          </div>
+          </div> */}
+          <small className="text-danger italic">{error?.message}</small>
         </ModalBody>
         <ModalFooter>
-          <Button color="primary" isDisabled={isFormInvalid}>
+          <Button color="primary" isDisabled={isFormInvalid} onClick={handleLogin} isLoading={loading}>
             Login
           </Button>
         </ModalFooter>
