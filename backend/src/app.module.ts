@@ -9,7 +9,7 @@ import { UsersModule } from './modules/users/users.module';
 import { AccountsModule } from './modules/accounts/accounts.module';
 import { RolesModule } from './modules/roles/roles.module';
 import { PermissionsModule } from './modules/permissions/permissions.module';
-import { DatabaseConfig } from './config/database.config';
+import { DatabaseConfig } from './configs/database.config';
 import { join } from 'path';
 import { AppResolver } from './app.resolver';
 import { AuthModule } from './modules/auth/auth.module';
