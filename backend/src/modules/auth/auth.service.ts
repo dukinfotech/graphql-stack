@@ -37,6 +37,11 @@ export class AuthService {
     return tokens;
   }
 
+  async clearJwtTokens(userId: number) {
+    await this.updateJwtTokens(userId, null, null);
+    return true;
+  }
+
   private async generateJwtTokens(userId: number, email: string) {
     const [accessToken, refreshAccessToken] = await Promise.all([
       this.jwtService.signAsync(
@@ -68,10 +73,14 @@ export class AuthService {
   }
 
   private async updateJwtTokens(userId: number, accessToken: string, refreshAccessToken: string) {
-    const [hashedAccessToken, hashedRefreshAccessToken] = await Promise.all([
-      bcrypt.hash(accessToken, 10),
-      bcrypt.hash(refreshAccessToken, 10)
-    ]);
-    await this.accountsService.updateJwtTokens(userId, hashedAccessToken, hashedRefreshAccessToken);
+    if (accessToken && refreshAccessToken) {
+      const [hashedAccessToken, hashedRefreshAccessToken] = await Promise.all([
+        bcrypt.hash(accessToken, 10),
+        bcrypt.hash(refreshAccessToken, 10)
+      ]);
+      await this.accountsService.updateJwtTokens(userId, hashedAccessToken, hashedRefreshAccessToken);
+    } else {
+      await this.accountsService.updateJwtTokens(userId, null, null);
+    }
   }
 }

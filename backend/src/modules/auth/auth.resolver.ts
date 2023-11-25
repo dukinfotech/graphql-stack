@@ -5,6 +5,8 @@ import { LoginOutput } from "./outputs/login.output";
 import { LoginInput } from "./inputs/login.input";
 import { CurrentPayload, JwtRefreshAuthGuard } from "./guards/jwt-refresh-auth.guard";
 import { RefreshTokenOutput } from "./outputs/refreshToken.output";
+import { CurrentUser, JwtAuthGuard } from "./guards/jwt-auth.guard";
+import { User } from "../users/user.entity";
 
 @Resolver()
 export class AuthResolver {
@@ -14,20 +16,18 @@ export class AuthResolver {
 
   @Mutation(() => LoginOutput)
   login(@Args('loginInput') loginInput: LoginInput) {
-    try {
-      return this.authService.login(loginInput.email, loginInput.password);
-    } catch (error) {
-      throw new UnauthorizedException();
-    }
+    return this.authService.login(loginInput.email, loginInput.password);
   }
 
   @UseGuards(JwtRefreshAuthGuard)
   @Mutation(() => RefreshTokenOutput)
   refreshTokens(@CurrentPayload() payload: any) {
-    try {
-      return this.authService.refreshTokens(payload.userId);
-    } catch (error) {
-      throw new UnauthorizedException();
-    }
+    return this.authService.refreshTokens(payload.userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Mutation(() => Boolean)
+  logout(@CurrentUser() currentUser: User) {
+    return this.authService.clearJwtTokens(currentUser.id);
   }
 }

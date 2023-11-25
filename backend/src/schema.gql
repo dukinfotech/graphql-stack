@@ -30,6 +30,7 @@ type LoginOutput {
 
 type Mutation {
   login(loginInput: LoginInput!): LoginOutput!
+  logout: Boolean!
   refreshTokens: RefreshTokenOutput!
 }
 
