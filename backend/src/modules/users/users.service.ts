@@ -10,15 +10,15 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) { }
 
-  findAll(): Promise<User[]> {
-    return this.usersRepository.find();
-  }
-
-  findOne(id: number): Promise<User | null> {
-    return this.usersRepository.findOneBy({ id });
-  }
-
-  async remove(id: number): Promise<void> {
-    await this.usersRepository.delete(id);
+  async findByEmail(email: string): Promise<User> {
+    const user = await this.usersRepository.findOne({
+      relations: ['account'],
+      where: {
+        account: {
+          email
+        }
+      }
+    });
+    return user;
   }
 }

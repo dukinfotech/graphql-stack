@@ -12,6 +12,7 @@ import { PermissionsModule } from './modules/permissions/permissions.module';
 import { DatabaseConfig } from './config/database.config';
 import { join } from 'path';
 import { AppResolver } from './app.resover';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { AppResolver } from './app.resover';
     AccountsModule,
     RolesModule,
     PermissionsModule,
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService, AppResolver],

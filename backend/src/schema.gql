@@ -2,6 +2,36 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+type LoginOutput {
+  accessToken: String!
+  address: String!
+  birthday: String!
+  city: String!
+  country: String!
+  createdAt: DateTime!
+  district: String!
+  firstName: String!
+  id: Float!
+  lastName: String!
+  phone: String!
+  refreshAccessToken: String!
+  updatedAt: DateTime!
+}
+
+type Mutation {
+  login(loginInput: LoginInput!): LoginOutput!
+}
+
 type Query {
   sayHello: String!
 }
