@@ -38,7 +38,7 @@ export const UserDropdown = () => {
     if (logoutData && logoutData.logout) {
       setLogout();
       deleteCookie("accessToken");
-      deleteCookie("refreshAccesstoken");
+      deleteCookie("refreshAccessToken");
       redirect('/login');
     }
   }, [logoutData]);
