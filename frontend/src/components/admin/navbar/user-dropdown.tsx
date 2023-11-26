@@ -13,8 +13,8 @@ import { DarkModeSwitch } from "./darkmodeswitch";
 import { useAuthStore } from "@/stores/authStore";
 import { redirect } from "next/navigation";
 import { Key } from "@react-types/shared";
-import { gql, useMutation } from "@apollo/client";
-import { LogoutMutation } from "@/gql/graphql";
+import { gql, useLazyQuery, useMutation } from "@apollo/client";
+import { GetSelfQuery, LogoutMutation } from "@/gql/graphql";
 import { deleteCookie } from "cookies-next";
 
 const LOGOUT_MUTATION = gql`
@@ -23,9 +23,27 @@ const LOGOUT_MUTATION = gql`
   }
 `;
 
-export const UserDropdown = () => {
-  const { user, setLogout } = useAuthStore((state) => state);
+const GET_SELF_QUERY = gql`
+  query getSelf {
+    getSelf {
+      address
+      birthday
+      city
+      country
+      updatedAt
+      phone
+      lastName
+      id
+      firstName
+      district
+      createdAt
+    }
+  }
+`
 
+export const UserDropdown = () => {
+  const { isAuthenticated, user, setLogin, setLogout } = useAuthStore((state) => state);
+  const [getSelf, { data: getSelfData }] = useLazyQuery<GetSelfQuery>(GET_SELF_QUERY);
   const [logout, { data: logoutData }] = useMutation<LogoutMutation>(LOGOUT_MUTATION);
 
   const handleClickItem = async (actionKey: Key) => {
@@ -33,6 +51,20 @@ export const UserDropdown = () => {
       logout();
     }
   }
+
+  // Refretch user info if deleted localstorage but access token still exist
+  useEffect(() => {
+    if (!isAuthenticated) {
+      getSelf();
+    }
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    if (getSelfData) {
+      const { __typename, ...user } = getSelfData.getSelf;
+      setLogin(user);
+    }
+  }, [getSelfData]);
 
   useEffect(() => {
     if (logoutData && logoutData.logout) {

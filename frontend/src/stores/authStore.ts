@@ -2,7 +2,7 @@ import { LoginOutput } from '@/gql/graphql'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
-type User = Omit<LoginOutput, 'accessToken' | 'refreshAccessToken'>;
+type User = Omit<LoginOutput, '__typename' | 'accessToken' | 'refreshAccessToken'>;
 
 type State = {
   isAuthenticated: boolean,
