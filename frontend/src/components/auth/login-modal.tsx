@@ -10,7 +10,10 @@ import {
 } from "@nextui-org/react";
 import { MdMail, MdLock } from "react-icons/md";
 import { gql, useMutation } from "@apollo/client";
-import { LoginOutput } from "@/gql/graphql";
+import { LoginMutation } from "@/gql/graphql";
+import { useAuthStore } from "@/stores/authStore";
+import { redirect } from "next/navigation";
+import { setCookie } from "cookies-next";
 
 const LOGIN_MUTATION = gql`
   mutation Login($email: String!, $password: String!) {
@@ -39,13 +42,14 @@ type LoginForm = {
 };
 
 export default function LoginModal() {
+  const setLogin = useAuthStore((state) => state.setLogin);
   const [loginForm, setLoginForm] = useState<LoginForm>({
     email: "",
     password: "",
     isRememberMe: false,
   });
 
-  const [login, { data: loginData, loading, error }] = useMutation<LoginOutput>(LOGIN_MUTATION);
+  const [login, { data: loginData, loading, error }] = useMutation<LoginMutation>(LOGIN_MUTATION);
 
   const validateEmail = (value: string) =>
     value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i);
@@ -70,7 +74,11 @@ export default function LoginModal() {
 
   useEffect(() => {
     if (loginData) {
-      console.log(loginData);
+      const { accessToken, refreshAccessToken, ...user } = loginData.login;
+      setLogin(user); // Set global state
+      setCookie('accessToken', accessToken);
+      setCookie('refreshAccessToken', refreshAccessToken);
+      redirect('/admin');
     }
   }, [loginData]);
 

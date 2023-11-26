@@ -1,16 +1,31 @@
-import { ApolloClient, HttpLink, InMemoryCache, split } from "@apollo/client";
+import { ApolloClient, InMemoryCache, createHttpLink, split } from "@apollo/client";
 import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
 import { createClient } from "graphql-ws";
 import { getMainDefinition } from '@apollo/client/utilities';
+import { setContext } from '@apollo/client/link/context';
+import { getCookie } from "cookies-next";
 
-const httpsLink = new HttpLink({
+const httpLink = createHttpLink({
   uri: process.env.NEXT_PUBLIC_HASURA_HTTPS_ENDPOINT,
+  credentials: 'same-origin',
   headers: {
     'x-hasura-admin-secret': process.env.NEXT_PUBLIC_HASURA_GRAPHQL_ADMIN_SECRET!
   }
 });
 
-const wssLink = new GraphQLWsLink(
+const authLink = setContext((_, { headers }) => {
+  // get the authentication token from local storage if it exists
+  const accessToken = getCookie('accessToken');
+  // return the headers to the context so httpLink can read them
+  return {
+    headers: {
+      ...headers,
+      authorization: accessToken ? `Bearer ${accessToken}` : "",
+    }
+  }
+});
+
+const wsLink = new GraphQLWsLink(
   createClient({
     url: process.env.NEXT_PUBLIC_HASURA_WSS_ENDPOINT!,
     connectionParams: {
@@ -29,8 +44,8 @@ const link = split(
       definition.operation === 'subscription'
     );
   },
-  wssLink,
-  httpsLink
+  wsLink,
+  authLink.concat(httpLink)
 );
 
 const createApolloClient = () => {
