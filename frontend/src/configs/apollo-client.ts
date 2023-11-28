@@ -1,5 +1,6 @@
-import { ApolloClient, InMemoryCache, createHttpLink, split } from "@apollo/client";
+import { ApolloClient, InMemoryCache, createHttpLink, from, split } from "@apollo/client";
 import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
+import { onError } from "@apollo/client/link/error";
 import { createClient } from "graphql-ws";
 import { getMainDefinition } from '@apollo/client/utilities';
 import { setContext } from '@apollo/client/link/context';
@@ -36,6 +37,21 @@ const wsLink = new GraphQLWsLink(
   }),
 );
 
+const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) => {
+  if (graphQLErrors) {
+    for (let { message, locations, path, extensions } of graphQLErrors) {
+      console.log(
+        `[GraphQL error]: Message: ${message}, Location: ${JSON.stringify(locations)}, Path: ${path}`
+      )
+    }
+  }
+  // To retry on network errors, we recommend the RetryLink
+  // instead of the onError link. This just logs the error.
+  if (networkError) {
+    console.log(`[Network error]: ${networkError}`);
+  }
+});
+
 const link = split(
   ({ query }) => {
     const definition = getMainDefinition(query);
@@ -45,7 +61,7 @@ const link = split(
     );
   },
   wsLink,
-  authLink.concat(httpLink)
+  from([errorLink, authLink, httpLink])
 );
 
 const createApolloClient = () => {
