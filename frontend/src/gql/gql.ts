@@ -16,6 +16,7 @@ const documents = {
     "\n  mutation Logout {\n    logout\n  }\n": types.LogoutDocument,
     "\n  query getSelf {\n    getSelf {\n      address\n      birthday\n      city\n      country\n      updatedAt\n      phone\n      lastName\n      id\n      firstName\n      district\n      createdAt\n    }\n  }\n": types.GetSelfDocument,
     "\n  mutation Login($email: String!, $password: String!) {\n    login(loginInput: {email: $email, password: $password}) {\n      accessToken\n      refreshAccessToken\n      address\n      birthday\n      city\n      country\n      createdAt\n      district\n      firstName\n      id\n      lastName\n      phone\n      updatedAt\n    }\n  }\n": types.LoginDocument,
+    "\n  mutation refreshTokens {\n    refreshTokens {\n      accessToken\n      refreshAccessToken\n    }\n  }\n": types.RefreshTokensDocument,
 };
 
 /**
@@ -44,6 +45,10 @@ export function graphql(source: "\n  query getSelf {\n    getSelf {\n      addre
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation Login($email: String!, $password: String!) {\n    login(loginInput: {email: $email, password: $password}) {\n      accessToken\n      refreshAccessToken\n      address\n      birthday\n      city\n      country\n      createdAt\n      district\n      firstName\n      id\n      lastName\n      phone\n      updatedAt\n    }\n  }\n"): (typeof documents)["\n  mutation Login($email: String!, $password: String!) {\n    login(loginInput: {email: $email, password: $password}) {\n      accessToken\n      refreshAccessToken\n      address\n      birthday\n      city\n      country\n      createdAt\n      district\n      firstName\n      id\n      lastName\n      phone\n      updatedAt\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation refreshTokens {\n    refreshTokens {\n      accessToken\n      refreshAccessToken\n    }\n  }\n"): (typeof documents)["\n  mutation refreshTokens {\n    refreshTokens {\n      accessToken\n      refreshAccessToken\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};
