@@ -16,6 +16,11 @@ import { Key } from "@react-types/shared";
 import { gql, useLazyQuery, useMutation } from "@apollo/client";
 import { GetSelfQuery, LogoutMutation } from "@/gql/graphql";
 import { deleteCookie } from "cookies-next";
+import {
+  ACCESS_TOKEN,
+  LOGIN_URL,
+  REFRESH_ACCESS_TOKEN,
+} from "@/utils/constants";
 
 const LOGOUT_MUTATION = gql`
   mutation Logout {
@@ -39,18 +44,22 @@ const GET_SELF_QUERY = gql`
       createdAt
     }
   }
-`
+`;
 
 export const UserDropdown = () => {
-  const { isAuthenticated, user, setLogin, setLogout } = useAuthStore((state) => state);
-  const [getSelf, { data: getSelfData }] = useLazyQuery<GetSelfQuery>(GET_SELF_QUERY);
-  const [logout, { data: logoutData }] = useMutation<LogoutMutation>(LOGOUT_MUTATION);
+  const { isAuthenticated, user, setLogin, setLogout } = useAuthStore(
+    (state) => state
+  );
+  const [getSelf, { data: getSelfData }] =
+    useLazyQuery<GetSelfQuery>(GET_SELF_QUERY);
+  const [logout, { data: logoutData }] =
+    useMutation<LogoutMutation>(LOGOUT_MUTATION);
 
   const handleClickItem = async (actionKey: Key) => {
-    if (actionKey.toString() === 'logout') {
+    if (actionKey.toString() === "logout") {
       logout();
     }
-  }
+  };
 
   // Refretch user info if deleted localstorage but access token still exist
   useEffect(() => {
@@ -69,9 +78,9 @@ export const UserDropdown = () => {
   useEffect(() => {
     if (logoutData && logoutData.logout) {
       setLogout();
-      deleteCookie("accessToken");
-      deleteCookie("refreshAccessToken");
-      redirect('/login');
+      deleteCookie(ACCESS_TOKEN);
+      deleteCookie(REFRESH_ACCESS_TOKEN);
+      redirect(LOGIN_URL);
     }
   }, [logoutData]);
 
@@ -96,7 +105,7 @@ export const UserDropdown = () => {
           className="flex flex-col justify-start w-full items-start"
         >
           <p>Signed in as</p>
-          <p>{user?.firstName + ' ' + user?.lastName}</p>
+          <p>{user?.firstName + " " + user?.lastName}</p>
         </DropdownItem>
         <DropdownItem key="logout" color="danger" className="text-danger">
           Log Out

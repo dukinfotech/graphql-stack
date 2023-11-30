@@ -14,10 +14,15 @@ import { LoginMutation } from "@/gql/graphql";
 import { useAuthStore } from "@/stores/authStore";
 import { redirect } from "next/navigation";
 import { setCookie } from "cookies-next";
+import {
+  ACCESS_TOKEN,
+  ADMIN_DASHBOARD_URL,
+  REFRESH_ACCESS_TOKEN,
+} from "@/utils/constants";
 
 const LOGIN_MUTATION = gql`
   mutation Login($email: String!, $password: String!) {
-    login(loginInput: {email: $email, password: $password}) {
+    login(loginInput: { email: $email, password: $password }) {
       accessToken
       refreshAccessToken
       address
@@ -49,7 +54,8 @@ export default function LoginModal() {
     isRememberMe: false,
   });
 
-  const [login, { data: loginData, loading, error }] = useMutation<LoginMutation>(LOGIN_MUTATION);
+  const [login, { data: loginData, loading, error }] =
+    useMutation<LoginMutation>(LOGIN_MUTATION);
 
   const validateEmail = (value: string) =>
     value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i);
@@ -67,18 +73,18 @@ export default function LoginModal() {
     await login({
       variables: {
         email: loginForm.email,
-        password: loginForm.password
-      }
-    })
-  }
+        password: loginForm.password,
+      },
+    });
+  };
 
   useEffect(() => {
     if (loginData) {
       const { accessToken, refreshAccessToken, ...user } = loginData.login;
       setLogin(user); // Set global state
-      setCookie('accessToken', accessToken);
-      setCookie('refreshAccessToken', refreshAccessToken);
-      redirect('/admin');
+      setCookie(ACCESS_TOKEN, accessToken);
+      setCookie(REFRESH_ACCESS_TOKEN, refreshAccessToken);
+      redirect(ADMIN_DASHBOARD_URL);
     }
   }, [loginData]);
 
@@ -135,7 +141,12 @@ export default function LoginModal() {
           <small className="text-danger italic">{error?.message}</small>
         </ModalBody>
         <ModalFooter>
-          <Button color="primary" isDisabled={isFormInvalid} onClick={handleLogin} isLoading={loading}>
+          <Button
+            color="primary"
+            isDisabled={isFormInvalid}
+            onClick={handleLogin}
+            isLoading={loading}
+          >
             Login
           </Button>
         </ModalFooter>
