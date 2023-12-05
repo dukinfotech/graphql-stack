@@ -54,7 +54,7 @@ export class AccountsService {
   async findByEmail(email: string): Promise<Account> {
     const account = await this.accountsRepository.findOne({
       where: { email },
-      relations: ['user'],
+      relations: ['user', 'user.roles', 'user.permissions'],
     });
     return account;
   }

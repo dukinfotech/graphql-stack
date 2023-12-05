@@ -21,7 +21,7 @@ services:
     restart: always
     environment:
       REMOTE_SCHEMA_ENDPOINT: http://backend:3001/graphql
-      HASURA_GRAPHQL_JWT_SECRET: '{"type":"HS256","key: ${JWT_ACCESS_TOKEN_SECRET}"}'
+      HASURA_GRAPHQL_JWT_SECRET: '{"type":"HS256","key":"$JWT_ACCESS_TOKEN_SECRET","claims_namespace_path":"$.hasura.claims"}'
       HASURA_GRAPHQL_UNAUTHORIZED_ROLE: anonymous
       HASURA_GRAPHQL_ENABLE_REMOTE_SCHEMA_PERMISSIONS: true
       HASURA_GRAPHQL_EXPERIMENTAL_FEATURES: naming_convention
