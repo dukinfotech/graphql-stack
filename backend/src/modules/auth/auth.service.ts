@@ -13,7 +13,7 @@ export class AuthService {
     private configService: ConfigService
   ) { }
 
-  async login(email: string, password: string) {
+  async login(email: string, password: string, userAgent: string) {
     const account = await this.accountsService.findByEmail(email);
     if (account) {
       const isMatch = bcrypt.compareSync(password, account.hashedPassword);
@@ -24,6 +24,7 @@ export class AuthService {
         const user = account.user;
         const { accessToken, refreshAccessToken } = await this.generateJwtTokens(account.userId, account.email);
         this.updateJwtTokens(account.userId, accessToken, refreshAccessToken);
+        this.accountsService.updateLoginHistory(account, userAgent);
         return { ...user, accessToken, refreshAccessToken }
       }
     }

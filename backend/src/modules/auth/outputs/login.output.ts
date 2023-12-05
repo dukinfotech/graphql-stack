@@ -14,26 +14,26 @@ export class LoginOutput {
   @Field()
   birthday: string;
 
-  @Field()
+  @Field({ nullable: true })
   phone?: string;
 
-  @Field()
+  @Field({ nullable: true })
   country?: string;
 
-  @Field()
+  @Field({ nullable: true })
   city?: string;
 
-  @Field()
+  @Field({ nullable: true })
   district?: string;
 
-  @Field()
+  @Field({ nullable: true })
   address?: string;
 
   @Field()
-  createdAt?: Date;
+  createdAt: Date;
 
   @Field()
-  updatedAt?: Date;
+  updatedAt: Date;
 
   @Field()
   accessToken: String;

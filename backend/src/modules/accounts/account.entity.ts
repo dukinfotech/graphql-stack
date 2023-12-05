@@ -53,6 +53,12 @@ export class Account {
   })
   hashedRefreshAccessToken: string | null;
 
+  @Column("timestamp with time zone", { name: "last_login_at", nullable: true })
+  lastLoginAt: Date | null;
+
+  @Column("text", { name: "last_user_agent", nullable: true })
+  lastUserAgent: string | null;
+
   @Column("timestamp with time zone", {
     name: "created_at",
     nullable: true,

@@ -9,6 +9,8 @@ CREATE TABLE public.accounts (
     hashed_password character varying(255),
     hashed_access_token character varying(255),
     hashed_refresh_access_token character varying(255),
+    last_login_at timestamp with time zone,
+    last_user_agent text,
     created_at timestamp with time zone DEFAULT now(),
     updated_at timestamp with time zone DEFAULT now(),
     deleted_at timestamp with time zone

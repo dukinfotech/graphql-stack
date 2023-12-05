@@ -28,16 +28,16 @@ input LoginInput {
 
 type LoginOutput {
   accessToken: String!
-  address: String!
+  address: String
   birthday: String!
-  city: String!
-  country: String!
+  city: String
+  country: String
   createdAt: DateTime!
-  district: String!
+  district: String
   firstName: String!
   id: Float!
   lastName: String!
-  phone: String!
+  phone: String
   refreshAccessToken: String!
   updatedAt: DateTime!
 }
