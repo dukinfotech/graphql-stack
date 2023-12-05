@@ -27,21 +27,23 @@ const REFRESH_TOKENS_MUTATION = gql`
 const httpLink = createHttpLink({
   uri: process.env.NEXT_PUBLIC_HASURA_HTTPS_ENDPOINT,
   credentials: "same-origin",
-  headers: {
-    "x-hasura-admin-secret":
-      process.env.NEXT_PUBLIC_HASURA_GRAPHQL_ADMIN_SECRET!,
-  },
 });
 
 const authLink = setContext((_, { headers }) => {
   // get the authentication token from local storage if it exists
   const accessToken = getCookie(ACCESS_TOKEN);
   // return the headers to the context so httpLink can read them
+  if (accessToken) {
+    return {
+      headers: {
+        ...headers,
+        authorization: `Bearer ${accessToken}`,
+      },
+    };
+  }
+
   return {
-    headers: {
-      ...headers,
-      authorization: accessToken ? `Bearer ${accessToken}` : "",
-    },
+    headers,
   };
 });
 

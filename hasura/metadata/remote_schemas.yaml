@@ -5,3 +5,50 @@
     customization: {}
     forward_client_headers: true
   comment: Customized queries and mutations from Apollo Server (Nestjs)
+  permissions:
+    - role: anonymous
+      definition:
+        schema: |
+          schema {
+            query: Query
+            mutation: Mutation
+          }
+          scalar DateTime
+          type GetSelfOutput {
+            address: String!
+            birthday: String!
+            city: String!
+            country: String!
+            createdAt: DateTime!
+            district: String!
+            firstName: String!
+            id: Float!
+            lastName: String!
+            phone: String!
+            updatedAt: DateTime!
+          }
+          type LoginOutput {
+            accessToken: String!
+            address: String
+            birthday: String!
+            city: String
+            country: String
+            createdAt: DateTime!
+            district: String
+            firstName: String!
+            id: Float!
+            lastName: String!
+            phone: String
+            refreshAccessToken: String!
+            updatedAt: DateTime!
+          }
+          type Mutation {
+            login(loginInput: LoginInput!): LoginOutput!
+          }
+          type Query {
+            sayHello: String!
+          }
+          input LoginInput {
+            email: String!
+            password: String!
+          }

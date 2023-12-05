@@ -21,6 +21,8 @@ services:
     restart: always
     environment:
       REMOTE_SCHEMA_ENDPOINT: http://backend:3001/graphql
+      HASURA_GRAPHQL_JWT_SECRET: '{"type":"HS256","key: ${JWT_ACCESS_TOKEN_SECRET}"}'
+      HASURA_GRAPHQL_UNAUTHORIZED_ROLE: anonymous
       HASURA_GRAPHQL_ENABLE_REMOTE_SCHEMA_PERMISSIONS: true
       HASURA_GRAPHQL_EXPERIMENTAL_FEATURES: naming_convention
       HASURA_GRAPHQL_METADATA_DATABASE_URL: "postgres://${DB_USER}:${DB_PASSWORD}@database:${DB_PORT}/${DB_NAME}"
