@@ -6,6 +6,93 @@
     forward_client_headers: true
   comment: Customized queries and mutations from Apollo Server (Nestjs)
   permissions:
+    - role: manager
+      definition:
+        schema: |
+          schema {
+            query: Query
+            mutation: Mutation
+          }
+          scalar DateTime
+          type GetSelfOutput {
+            address: String!
+            birthday: String!
+            city: String!
+            country: String!
+            createdAt: DateTime!
+            district: String!
+            firstName: String!
+            id: Float!
+            lastName: String!
+            phone: String!
+            updatedAt: DateTime!
+          }
+          type Mutation {
+            logout: Boolean!
+            refreshTokens: RefreshTokenOutput!
+          }
+          type Query {
+            getSelf: GetSelfOutput!
+            sayHello: String!
+            showEnv: String!
+          }
+          type RefreshTokenOutput {
+            accessToken: String!
+            refreshAccessToken: String!
+          }
+    - role: user
+      definition:
+        schema: |
+          schema {
+            query: Query
+            mutation: Mutation
+          }
+          scalar DateTime
+          type GetSelfOutput {
+            address: String!
+            birthday: String!
+            city: String!
+            country: String!
+            createdAt: DateTime!
+            district: String!
+            firstName: String!
+            id: Float!
+            lastName: String!
+            phone: String!
+            updatedAt: DateTime!
+          }
+          type LoginOutput {
+            accessToken: String!
+            address: String
+            birthday: String!
+            city: String
+            country: String
+            createdAt: DateTime!
+            district: String
+            firstName: String!
+            id: Float!
+            lastName: String!
+            phone: String
+            refreshAccessToken: String!
+            updatedAt: DateTime!
+          }
+          type Mutation {
+            logout: Boolean!
+            refreshTokens: RefreshTokenOutput!
+          }
+          type Query {
+            getSelf: GetSelfOutput!
+            sayHello: String!
+            showEnv: String!
+          }
+          type RefreshTokenOutput {
+            accessToken: String!
+            refreshAccessToken: String!
+          }
+          input LoginInput {
+            email: String!
+            password: String!
+          }
     - role: anonymous
       definition:
         schema: |
@@ -46,7 +133,7 @@
             login(loginInput: LoginInput!): LoginOutput!
           }
           type Query {
-            sayHello: String!
+            showEnv: String!
           }
           input LoginInput {
             email: String!
