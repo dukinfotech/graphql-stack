@@ -34,4 +34,10 @@ export class GetSelfOutput {
 
   @Field()
   updatedAt?: Date;
+
+  @Field(type => [String])
+  roles: String[];
+
+  @Field(type => [String])
+  permissions: String[];
 }

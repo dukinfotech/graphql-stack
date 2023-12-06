@@ -26,9 +26,14 @@ export class AuthService {
         const user = account.user;
         const { accessToken, refreshAccessToken } =
           await this.generateJwtTokens(account);
+        const roles = user.roles.map((role) => role.name);
+        const permissions = user.permissions.map(
+          (permission) => permission.value,
+        );
+
         this.updateJwtTokens(account.userId, accessToken, refreshAccessToken);
         this.accountsService.updateLoginHistory(account, userAgent);
-        return { ...user, accessToken, refreshAccessToken };
+        return { ...user, accessToken, refreshAccessToken, roles, permissions };
       }
     }
     throw new BadRequestException('Email or password is incorrect');
@@ -54,7 +59,7 @@ export class AuthService {
     const user = account.user;
     const userRoles = user.roles.map((role) => role.name);
     const userPermissions = user.permissions.map(
-      (permission) => permission.name,
+      (permission) => permission.value,
     );
     const claims = {
       'x-hasura-allowed-roles': userRoles, // Hasura claims

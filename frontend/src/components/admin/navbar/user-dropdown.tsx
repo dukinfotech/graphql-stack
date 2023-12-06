@@ -42,6 +42,8 @@ const GET_SELF_QUERY = gql`
       firstName
       district
       createdAt
+      roles
+      permissions
     }
   }
 `;

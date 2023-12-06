@@ -17,7 +17,9 @@ type GetSelfOutput {
   firstName: String!
   id: Float!
   lastName: String!
+  permissions: [String!]!
   phone: String!
+  roles: [String!]!
   updatedAt: DateTime!
 }
 
@@ -37,8 +39,10 @@ type LoginOutput {
   firstName: String!
   id: Float!
   lastName: String!
+  permissions: [String!]!
   phone: String
   refreshAccessToken: String!
+  roles: [String!]!
   updatedAt: DateTime!
 }
 

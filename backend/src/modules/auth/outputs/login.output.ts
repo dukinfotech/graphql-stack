@@ -1,4 +1,4 @@
-import { Field, ObjectType } from "@nestjs/graphql";
+import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
 export class LoginOutput {
@@ -40,4 +40,10 @@ export class LoginOutput {
 
   @Field()
   refreshAccessToken: String;
+
+  @Field(type => [String])
+  roles: String[];
+
+  @Field(type => [String])
+  permissions: String[];
 }

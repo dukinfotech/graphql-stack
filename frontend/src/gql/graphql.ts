@@ -46,7 +46,9 @@ export type GetSelfOutput = {
   firstName: Scalars['String']['output'];
   id: Scalars['Float']['output'];
   lastName: Scalars['String']['output'];
+  permissions: Array<Scalars['String']['output']>;
   phone: Scalars['String']['output'];
+  roles: Array<Scalars['String']['output']>;
   updatedAt: Scalars['DateTime']['output'];
 };
 
@@ -71,17 +73,19 @@ export type LoginInput = {
 export type LoginOutput = {
   __typename?: 'LoginOutput';
   accessToken: Scalars['String']['output'];
-  address: Scalars['String']['output'];
+  address?: Maybe<Scalars['String']['output']>;
   birthday: Scalars['String']['output'];
-  city: Scalars['String']['output'];
-  country: Scalars['String']['output'];
+  city?: Maybe<Scalars['String']['output']>;
+  country?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
-  district: Scalars['String']['output'];
+  district?: Maybe<Scalars['String']['output']>;
   firstName: Scalars['String']['output'];
   id: Scalars['Float']['output'];
   lastName: Scalars['String']['output'];
-  phone: Scalars['String']['output'];
+  permissions: Array<Scalars['String']['output']>;
+  phone?: Maybe<Scalars['String']['output']>;
   refreshAccessToken: Scalars['String']['output'];
+  roles: Array<Scalars['String']['output']>;
   updatedAt: Scalars['DateTime']['output'];
 };
 
@@ -136,6 +140,8 @@ export type Accounts = {
   hashed_refresh_access_token?: Maybe<Scalars['String']['output']>;
   id: Scalars['Int']['output'];
   is_active: Scalars['Boolean']['output'];
+  last_login_at?: Maybe<Scalars['timestamptz']['output']>;
+  last_user_agent?: Maybe<Scalars['String']['output']>;
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
   /** An object relationship */
   user: Users;
@@ -194,6 +200,8 @@ export type Accounts_Bool_Exp = {
   hashed_refresh_access_token?: InputMaybe<String_Comparison_Exp>;
   id?: InputMaybe<Int_Comparison_Exp>;
   is_active?: InputMaybe<Boolean_Comparison_Exp>;
+  last_login_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  last_user_agent?: InputMaybe<String_Comparison_Exp>;
   updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
   user?: InputMaybe<Users_Bool_Exp>;
   user_id?: InputMaybe<Int_Comparison_Exp>;
@@ -227,6 +235,8 @@ export type Accounts_Insert_Input = {
   hashed_password?: InputMaybe<Scalars['String']['input']>;
   hashed_refresh_access_token?: InputMaybe<Scalars['String']['input']>;
   is_active?: InputMaybe<Scalars['Boolean']['input']>;
+  last_login_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  last_user_agent?: InputMaybe<Scalars['String']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
   user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
   user_id?: InputMaybe<Scalars['Int']['input']>;
@@ -244,6 +254,8 @@ export type Accounts_Max_Fields = {
   hashed_password?: Maybe<Scalars['String']['output']>;
   hashed_refresh_access_token?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['Int']['output']>;
+  last_login_at?: Maybe<Scalars['timestamptz']['output']>;
+  last_user_agent?: Maybe<Scalars['String']['output']>;
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
   user_id?: Maybe<Scalars['Int']['output']>;
   username?: Maybe<Scalars['String']['output']>;
@@ -260,6 +272,8 @@ export type Accounts_Min_Fields = {
   hashed_password?: Maybe<Scalars['String']['output']>;
   hashed_refresh_access_token?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['Int']['output']>;
+  last_login_at?: Maybe<Scalars['timestamptz']['output']>;
+  last_user_agent?: Maybe<Scalars['String']['output']>;
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
   user_id?: Maybe<Scalars['Int']['output']>;
   username?: Maybe<Scalars['String']['output']>;
@@ -299,6 +313,8 @@ export type Accounts_Order_By = {
   hashed_refresh_access_token?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   is_active?: InputMaybe<Order_By>;
+  last_login_at?: InputMaybe<Order_By>;
+  last_user_agent?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
   user?: InputMaybe<Users_Order_By>;
   user_id?: InputMaybe<Order_By>;
@@ -331,6 +347,10 @@ export enum Accounts_Select_Column {
   /** column name */
   IsActive = 'is_active',
   /** column name */
+  LastLoginAt = 'last_login_at',
+  /** column name */
+  LastUserAgent = 'last_user_agent',
+  /** column name */
   UpdatedAt = 'updated_at',
   /** column name */
   UserId = 'user_id',
@@ -348,6 +368,8 @@ export type Accounts_Set_Input = {
   hashed_password?: InputMaybe<Scalars['String']['input']>;
   hashed_refresh_access_token?: InputMaybe<Scalars['String']['input']>;
   is_active?: InputMaybe<Scalars['Boolean']['input']>;
+  last_login_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  last_user_agent?: InputMaybe<Scalars['String']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
   user_id?: InputMaybe<Scalars['Int']['input']>;
   username?: InputMaybe<Scalars['String']['input']>;
@@ -393,6 +415,8 @@ export type Accounts_Stream_Cursor_Value_Input = {
   hashed_refresh_access_token?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   is_active?: InputMaybe<Scalars['Boolean']['input']>;
+  last_login_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  last_user_agent?: InputMaybe<Scalars['String']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
   user_id?: InputMaybe<Scalars['Int']['input']>;
   username?: InputMaybe<Scalars['String']['input']>;
@@ -423,6 +447,10 @@ export enum Accounts_Update_Column {
   HashedRefreshAccessToken = 'hashed_refresh_access_token',
   /** column name */
   IsActive = 'is_active',
+  /** column name */
+  LastLoginAt = 'last_login_at',
+  /** column name */
+  LastUserAgent = 'last_user_agent',
   /** column name */
   UpdatedAt = 'updated_at',
   /** column name */
@@ -1194,6 +1222,7 @@ export type Query_Root = {
   /** fetch data from the table: "roles" using primary key columns */
   roles_by_pk?: Maybe<Roles>;
   sayHello: Scalars['String']['output'];
+  showEnv: Scalars['String']['output'];
   /** fetch data from the table: "user_permission" */
   user_permission: Array<User_Permission>;
   /** fetch aggregated fields from the table: "user_permission" */
@@ -3141,7 +3170,7 @@ export type LogoutMutation = { __typename?: 'mutation_root', logout: boolean };
 export type GetSelfQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetSelfQuery = { __typename?: 'query_root', getSelf: { __typename?: 'GetSelfOutput', address: string, birthday: string, city: string, country: string, updatedAt: any, phone: string, lastName: string, id: number, firstName: string, district: string, createdAt: any } };
+export type GetSelfQuery = { __typename?: 'query_root', getSelf: { __typename?: 'GetSelfOutput', address: string, birthday: string, city: string, country: string, updatedAt: any, phone: string, lastName: string, id: number, firstName: string, district: string, createdAt: any, roles: Array<string>, permissions: Array<string> } };
 
 export type LoginMutationVariables = Exact<{
   email: Scalars['String']['input'];
@@ -3149,7 +3178,7 @@ export type LoginMutationVariables = Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'mutation_root', login: { __typename?: 'LoginOutput', accessToken: string, refreshAccessToken: string, address: string, birthday: string, city: string, country: string, createdAt: any, district: string, firstName: string, id: number, lastName: string, phone: string, updatedAt: any } };
+export type LoginMutation = { __typename?: 'mutation_root', login: { __typename?: 'LoginOutput', accessToken: string, refreshAccessToken: string, address?: string | null, birthday: string, city?: string | null, country?: string | null, createdAt: any, district?: string | null, firstName: string, id: number, lastName: string, phone?: string | null, updatedAt: any, roles: Array<string>, permissions: Array<string> } };
 
 export type RefreshTokensMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -3158,6 +3187,6 @@ export type RefreshTokensMutation = { __typename?: 'mutation_root', refreshToken
 
 
 export const LogoutDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Logout"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"logout"}}]}}]} as unknown as DocumentNode<LogoutMutation, LogoutMutationVariables>;
-export const GetSelfDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getSelf"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getSelf"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"birthday"}},{"kind":"Field","name":{"kind":"Name","value":"city"}},{"kind":"Field","name":{"kind":"Name","value":"country"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"district"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}}]} as unknown as DocumentNode<GetSelfQuery, GetSelfQueryVariables>;
-export const LoginDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Login"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"email"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"password"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"login"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"loginInput"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"email"},"value":{"kind":"Variable","name":{"kind":"Name","value":"email"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"password"},"value":{"kind":"Variable","name":{"kind":"Name","value":"password"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"accessToken"}},{"kind":"Field","name":{"kind":"Name","value":"refreshAccessToken"}},{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"birthday"}},{"kind":"Field","name":{"kind":"Name","value":"city"}},{"kind":"Field","name":{"kind":"Name","value":"country"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"district"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]} as unknown as DocumentNode<LoginMutation, LoginMutationVariables>;
+export const GetSelfDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getSelf"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getSelf"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"birthday"}},{"kind":"Field","name":{"kind":"Name","value":"city"}},{"kind":"Field","name":{"kind":"Name","value":"country"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"district"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"roles"}},{"kind":"Field","name":{"kind":"Name","value":"permissions"}}]}}]}}]} as unknown as DocumentNode<GetSelfQuery, GetSelfQueryVariables>;
+export const LoginDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Login"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"email"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"password"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"login"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"loginInput"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"email"},"value":{"kind":"Variable","name":{"kind":"Name","value":"email"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"password"},"value":{"kind":"Variable","name":{"kind":"Name","value":"password"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"accessToken"}},{"kind":"Field","name":{"kind":"Name","value":"refreshAccessToken"}},{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"birthday"}},{"kind":"Field","name":{"kind":"Name","value":"city"}},{"kind":"Field","name":{"kind":"Name","value":"country"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"district"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"roles"}},{"kind":"Field","name":{"kind":"Name","value":"permissions"}}]}}]}}]} as unknown as DocumentNode<LoginMutation, LoginMutationVariables>;
 export const RefreshTokensDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"refreshTokens"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"refreshTokens"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"accessToken"}},{"kind":"Field","name":{"kind":"Name","value":"refreshAccessToken"}}]}}]}}]} as unknown as DocumentNode<RefreshTokensMutation, RefreshTokensMutationVariables>;

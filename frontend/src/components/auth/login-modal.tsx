@@ -36,6 +36,8 @@ const LOGIN_MUTATION = gql`
       lastName
       phone
       updatedAt
+      roles
+      permissions
     }
   }
 `;
