@@ -5,7 +5,7 @@ import { CompaniesDropdown } from "./companies-dropdown";
 import { HomeIcon } from "@/components/icons/sidebar/home-icon";
 import { PaymentsIcon } from "@/components/icons/sidebar/payments-icon";
 import { BalanceIcon } from "@/components/icons/sidebar/balance-icon";
-import { AccountsIcon } from "@/components/icons/sidebar/accounts-icon";
+import { FaUsersGear } from "react-icons/fa6";
 import { CustomersIcon } from "@/components/icons/sidebar/customers-icon";
 import { ProductsIcon } from "@/components/icons/sidebar/products-icon";
 import { ReportsIcon } from "@/components/icons/sidebar/reports-icon";
@@ -21,7 +21,7 @@ import { ChangeLogIcon } from "@/components/icons/sidebar/changelog-icon";
 import { usePathname } from "next/navigation";
 
 export const SidebarWrapper = () => {
-  const pathname = usePathname()
+  const pathname = usePathname();
   const { collapsed, setCollapsed } = useSidebarContext();
 
   return (
@@ -47,10 +47,10 @@ export const SidebarWrapper = () => {
             />
             <SidebarMenu title="Main Menu">
               <SidebarItem
-                isActive={pathname === "/accounts"}
-                title="Accounts"
-                icon={<AccountsIcon />}
-                href="accounts"
+                isActive={pathname === "/admin/roles"}
+                title="Roles"
+                icon={<FaUsersGear />}
+                href="/admin/roles"
               />
               <SidebarItem
                 isActive={pathname === "/payments"}
