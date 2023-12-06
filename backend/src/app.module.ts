@@ -13,13 +13,14 @@ import { DatabaseConfig } from './configs/database.config';
 import { join } from 'path';
 import { AppResolver } from './app.resolver';
 import { AuthModule } from './modules/auth/auth.module';
+import { HelpersModule } from './utils/helpers/helpers.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       ignoreEnvFile: true,
       isGlobal: true,
-      cache: true
+      cache: true,
     }),
     TypeOrmModule.forRootAsync({
       useClass: DatabaseConfig,
@@ -28,19 +29,20 @@ import { AuthModule } from './modules/auth/auth.module';
       imports: [ConfigModule],
       driver: ApolloDriver,
       useFactory: async (configService: ConfigService) => ({
-        autoSchemaFile: join(process.cwd(), "src/schema.gql"),
+        autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
         sortSchema: true,
-        playground: configService.get<string>("NODE_ENV") !== "production"
+        playground: configService.get<string>('NODE_ENV') !== 'production',
       }),
-      inject: [ConfigService]
+      inject: [ConfigService],
     }),
+    HelpersModule,
     UsersModule,
     AccountsModule,
     RolesModule,
     PermissionsModule,
-    AuthModule
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppResolver],
 })
-export class AppModule { }
+export class AppModule {}
