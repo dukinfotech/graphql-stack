@@ -4,6 +4,7 @@ import * as bcrypt from 'bcrypt';
 import { AccountsService } from '../accounts/accounts.service';
 import { ConfigService } from '@nestjs/config';
 import { Account } from '../accounts/account.entity';
+import { HelpersService } from '../../utils/helpers/helpers.service';
 
 @Injectable()
 export class AuthService {
@@ -11,6 +12,7 @@ export class AuthService {
     private accountsService: AccountsService,
     private jwtService: JwtService,
     private configService: ConfigService,
+    private helpersService: HelpersService,
   ) {}
 
   async login(email: string, password: string, userAgent: string) {
@@ -57,7 +59,8 @@ export class AuthService {
     const claims = {
       'x-hasura-allowed-roles': userRoles, // Hasura claims
       'x-hasura-default-role': 'user', // Can be overridden by the x-hasura-role header when making a reques
-      'x-hasura-allowed-permissions:': userPermissions.toString(), // Custom claims
+      'x-hasura-allowed-permissions:':
+        this.helpersService.arrayToPostgresArray(userPermissions), // Custom claims
       'x-hasura-user-id': user.id.toString(), // Custom claims
     };
     const payload = {
