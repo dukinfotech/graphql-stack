@@ -64,7 +64,7 @@ const errorLink = onError(
     if (graphQLErrors) {
       for (let { message, locations, path, extensions } of graphQLErrors) {
         // Break recursive loop when refreshTokens mutation also cause an error
-        if (path && !path.includes(REFRESH_ACCESS_TOKEN)) {
+        if (!path?.includes(REFRESH_ACCESS_TOKEN)) {
           console.error(
             `[GraphQL error]: Message: ${message}, Location: ${JSON.stringify(
               locations
@@ -73,7 +73,8 @@ const errorLink = onError(
           switch (extensions.code) {
             // Apollo Server sets code to UNAUTHENTICATED
             // when an AuthenticationError is thrown in a resolver
-            case "UNAUTHENTICATED":
+            case "UNAUTHENTICATED": // NestJS return code
+            case "invalid-jwt": // Hasura return code
               // Modify the operation context with a new token
               const oldHeaders = operation.getContext().headers;
               operation.setContext({
@@ -132,7 +133,8 @@ const refreshTokens = () => {
         );
         switch (extensions.code) {
           // Clear jwtTokens and redirect to admin via middleware
-          case "UNAUTHENTICATED":
+          case "UNAUTHENTICATED": // NestJS return code
+          case "invalid-jwt": // Hasura return code
             deleteCookie(ACCESS_TOKEN);
             deleteCookie(REFRESH_ACCESS_TOKEN);
             window.location.reload();
