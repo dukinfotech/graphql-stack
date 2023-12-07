@@ -2,10 +2,16 @@
 
 const GET_LIST_ROLES = gql`
   query ListRoles($limit: Int!, $offset: Int!) {
-    roles(limit: $limit, offset: $offset, order_by: { id: asc }) {
+    roles(
+      where: { deleted_at: { _is_null: true } }
+      limit: $limit
+      offset: $offset
+      order_by: { id: asc }
+    ) {
       id
       name
       created_at
+      updated_at
       deleted_at
     }
     roles_aggregate {
@@ -16,18 +22,24 @@ const GET_LIST_ROLES = gql`
   }
 `;
 
-import PaginationTable, { TypeColumn } from "@/components/admin/table/PaginationTable";
-import { Roles, Roles_Aggregate } from "@/gql/graphql";
-import { HASURA_ADMIN_ROLE, PAGINATION_LIMIT } from "@/utils/constants";
+import PaginationTable, {
+  TypeColumn,
+} from "@/components/admin/table/PaginationTable";
+import { Roles } from "@/gql/graphql";
+import { useMoment } from "@/hooks/useMoment";
+import { HASURA_ADMIN_ROLE } from "@/utils/constants";
 import { gql, useLazyQuery } from "@apollo/client";
+import { Button, Link, Tooltip } from "@nextui-org/react";
 import { useSearchParams } from "next/navigation";
-import { Key, useCallback, useEffect, useState } from "react";
+import { Key, useEffect, useState } from "react";
+import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 
 export default function AdminRolesPage() {
   const searchParams = useSearchParams();
   const page = Number(searchParams.get("page") || 1);
   const [total, setTotal] = useState<number>(0);
   const [items, setItems] = useState<Roles[]>([]);
+  const { timestamp } = useMoment();
 
   // Define columns
   const columns: TypeColumn[] = [
@@ -36,35 +48,59 @@ export default function AdminRolesPage() {
     { name: "UPDATED AT", uid: "updated_at" },
     { name: "ACTIONS", uid: "actions" },
   ];
+  // Render cells
+  const renderCells = (role: Roles, columnKey: Key) => {
+    const cellValue = role[columnKey as keyof Roles];
+    switch (columnKey) {
+      case "created_at":
+      case "updated_at":
+        return timestamp(cellValue);
+      case "actions":
+        return (
+          <div className="relative flex items-center gap-2">
+            <Tooltip color="warning" content="Edit">
+              <Button
+                isIconOnly
+                className="p-0 m-0"
+                href={`/admin/roles/${role.id}/edit`}
+                as={Link}
+                size="sm"
+                color="warning"
+                variant="solid"
+              >
+                <FaRegEdit />
+              </Button>
+            </Tooltip>
+            <Tooltip color="danger" content="Delete">
+              <Button
+                isIconOnly
+                className="p-0 m-0"
+                size="sm"
+                color="danger"
+                variant="solid"
+              >
+                <FaRegTrashAlt />
+              </Button>
+            </Tooltip>
+          </div>
+        );
+      default:
+        return cellValue;
+    }
+  };
 
-  // Render data
-  const renderData = useCallback(
-    (role: Roles, columnKey: Key) => {
-      const cellValue = role[columnKey as keyof Roles];
-
-      switch (columnKey) {
-        case "created_at":
-          return <>{role.created_at}</>;
-        case "updated_at":
-          return <>{role.updated_at}</>;
-        case "actions":
-
-        default:
-          return cellValue;
-      }
-    },
-    [items]
-  );
+  const handleRowsPerPageChange = (limit: number) => {
+    fetchData(limit);
+  };
 
   // Graphql query hook
   const [getListRoles, { data, loading }] = useLazyQuery<any>(GET_LIST_ROLES);
 
-  // Fetch data by watching page changes
-  useEffect(() => {
+  const fetchData = (limit: number) => {
     getListRoles({
       variables: {
-        limit: PAGINATION_LIMIT,
-        offset: (page - 1) * PAGINATION_LIMIT,
+        limit: limit,
+        offset: (page - 1) * limit,
       },
       context: {
         headers: {
@@ -72,7 +108,7 @@ export default function AdminRolesPage() {
         },
       },
     });
-  }, [page]);
+  };
 
   // Set total and items
   useEffect(() => {
@@ -91,7 +127,8 @@ export default function AdminRolesPage() {
       total={total}
       columns={columns}
       items={items}
-      renderData={renderData}
+      renderCells={renderCells}
+      onRowsPerPageChange={handleRowsPerPageChange}
     />
   );
 }

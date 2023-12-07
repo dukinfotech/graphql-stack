@@ -1,4 +1,12 @@
-import React, { Key, ReactNode, useMemo } from "react";
+import {
+  ChangeEvent,
+  Key,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import {
   Table,
   TableHeader,
@@ -6,15 +14,13 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  User,
-  Chip,
-  Tooltip,
-  ChipProps,
-  getKeyValue,
+  Selection,
   Pagination,
   Spinner,
+  Button,
+  Select,
+  SelectItem,
 } from "@nextui-org/react";
-import { FaRegEye, FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { PAGINATION_LIMIT } from "@/utils/constants";
 
@@ -28,7 +34,8 @@ interface Props {
   total: number;
   columns: TypeColumn[];
   items: any[];
-  renderData: (item: any, columnKey: Key) => ReactNode;
+  renderCells: (item: any, columnKey: Key) => ReactNode;
+  onRowsPerPageChange: (limit: number) => void;
 }
 
 export default function PaginationTable({
@@ -36,17 +43,52 @@ export default function PaginationTable({
   total,
   columns,
   items,
-  renderData,
+  renderCells,
+  onRowsPerPageChange,
 }: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const page = Number(searchParams.get("page") || 1);
+  const rowsPerPageOptions = [10, 20, 50, 100];
+  const [limit, setLimit] = useState<number>(rowsPerPageOptions[0]);
+
+  const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
+
+  const pageTotal = useMemo(() => {
+    return Math.ceil(total / limit);
+  }, [total, limit]);
 
   // Loading state
   const loadingState = useMemo(() => {
     return loading ? "loading" : "idle";
   }, [loading]);
+
+  useEffect(() => {
+    onRowsPerPageChange(limit);
+  }, [limit]);
+
+  const handleChangeRowPerPage = useCallback(
+    (e: ChangeEvent<HTMLSelectElement>) => {
+      setLimit(Number(e.target.value));
+      handleChangePage(1);
+    },
+    []
+  );
+
+  // Previous page
+  const onPreviousPage = useCallback(() => {
+    if (page > 1) {
+      handleChangePage(page - 1);
+    }
+  }, [page]);
+
+  // Next page
+  const onNextPage = useCallback(() => {
+    if (page < pageTotal) {
+      handleChangePage(page + 1);
+    }
+  }, [page, pageTotal]);
 
   // Update query string
   const handleChangePage = (page: number) => {
@@ -66,60 +108,76 @@ export default function PaginationTable({
     router.push(`${pathname}${query}`);
   };
 
-  // Pagination ReactNode
-  const PaginationWrapper = () => {
+  // Top Content
+  const topContent = useMemo(() => {
     return (
-      <div className="flex w-full justify-center">
+      <div className="flex justify-between items-center">
+        <span className="text-default-400 text-small">Total {total} items</span>
+        <label className="flex items-center text-default-400 text-small">
+          Rows per page:
+          <select
+            className="bg-transparent outline-none text-default-400 text-small"
+            onChange={handleChangeRowPerPage}
+          >
+            {rowsPerPageOptions.map((option) => (
+              <option value={option}>{option}</option>
+            ))}
+          </select>
+        </label>
+      </div>
+    );
+  }, [selectedKeys, total, items.length]);
+
+  // Bottom Content
+  const bottomContent = useMemo(() => {
+    return (
+      <div className="py-2 px-2 flex justify-between items-center">
+        <span className="w-[30%] text-small text-default-400">
+          {selectedKeys === "all"
+            ? "All items selected"
+            : `${selectedKeys.size} of ${total} selected`}
+        </span>
         <Pagination
           isCompact
           showControls
           showShadow
           color="primary"
           page={page}
-          total={Math.ceil(total / PAGINATION_LIMIT)}
+          total={pageTotal}
           onChange={(page) => handleChangePage(page)}
         />
+        <div className="hidden sm:flex w-[30%] justify-end gap-2">
+          <Button
+            isDisabled={pageTotal === 1 || page === 1}
+            size="sm"
+            variant="flat"
+            onPress={onPreviousPage}
+          >
+            Previous
+          </Button>
+          <Button
+            isDisabled={pageTotal === 1 || page === pageTotal}
+            size="sm"
+            variant="flat"
+            onPress={onNextPage}
+          >
+            Next
+          </Button>
+        </div>
       </div>
     );
-  };
-
-  // Render cells
-  const renderCells = (item: any, columnKey: Key) => {
-    switch (columnKey) {
-      case "created_at":
-      case "updated_at":
-        return <>123</>;
-      case "actions":
-        return (
-          <div className="relative flex items-center gap-2">
-            <Tooltip color="primary" content="View">
-              <span className="text-lg text-primary cursor-pointer active:opacity-50">
-                <FaRegEye />
-              </span>
-            </Tooltip>
-            <Tooltip color="secondary" content="Edit">
-              <span className="text-lg text-secondary cursor-pointer active:opacity-50">
-                <FaRegEdit />
-              </span>
-            </Tooltip>
-            <Tooltip color="danger" content="Delete">
-              <span className="text-lg text-danger cursor-pointer active:opacity-50">
-                <FaRegTrashAlt />
-              </span>
-            </Tooltip>
-          </div>
-        );
-      default:
-        return renderData(item, columnKey);
-    }
-  };
+  }, [selectedKeys, total, page, pageTotal, items.length]);
 
   return (
     <Table
       aria-label="table"
       color="primary"
       selectionMode="multiple"
-      bottomContent={<PaginationWrapper />}
+      onSelectionChange={setSelectedKeys}
+      topContent={topContent}
+      topContentPlacement="outside"
+      bottomContent={bottomContent}
+      bottomContentPlacement="outside"
     >
       <TableHeader columns={columns}>
         {(column) => (
