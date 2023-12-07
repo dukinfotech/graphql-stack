@@ -15,6 +15,7 @@ import {
 } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import { defaultRoles } from "../../page";
 
 const GET_ROLE = gql`
   query getRole($id: smallint!) {
@@ -38,11 +39,11 @@ const UPDATE_ROLE = gql`
     $name: String!
     $objects: [role_permission_insert_input!]!
   ) {
-    update_roles_by_pk(
-      pk_columns: { id: $id }
-      _set: { name: $name, updated_at: "now()" }
+    update_roles(
+      where: { id: { _eq: $id }, name: { _nin: ["admin", "manager", "user"] } }
+      _set: { name: $name }
     ) {
-      id
+      affected_rows
     }
     delete_role_permission(where: { role_id: { _eq: $id } }) {
       affected_rows
@@ -66,6 +67,7 @@ export default function AdminEditRolePage({
   const roleId = params.roleId;
   const { getPriorityRole } = useAuthStore((state) => state);
   const router = useRouter();
+  const [isDefaultRole, setIsDefaultRole] = useState<boolean>(false);
   const [editRoleForm, setEditRoleForm] = useState<EditRoleForm>({
     name: undefined,
     permissionIds: [],
@@ -95,6 +97,7 @@ export default function AdminEditRolePage({
         (rp: any) => rp.permission_id
       );
       setEditRoleForm({ name: _role.name, permissionIds: _permissionIds });
+      setIsDefaultRole(defaultRoles.includes(_role.name));
     }
   }, [getRoleData]);
 
@@ -132,6 +135,7 @@ export default function AdminEditRolePage({
       <Divider />
       <CardBody>
         <Input
+          isDisabled={isDefaultRole}
           autoFocus
           isRequired
           type="text"

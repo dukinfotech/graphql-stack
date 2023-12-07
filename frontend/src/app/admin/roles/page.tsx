@@ -39,6 +39,12 @@ const GET_LIST_ROLES = gql`
   }
 `;
 
+export const defaultRoles = [
+  HASURA_ADMIN_ROLE,
+  HASURA_MANAGER_ROLE,
+  HASURA_USER_ROLE,
+];
+
 const DELETE_ROLE = gql`
   mutation deleteRole($id: smallint!) {
     update_roles(
@@ -51,11 +57,6 @@ const DELETE_ROLE = gql`
 `;
 
 export default function AdminRolesPage() {
-  const defaultRoles = [
-    HASURA_ADMIN_ROLE,
-    HASURA_MANAGER_ROLE,
-    HASURA_USER_ROLE,
-  ];
   const { getPriorityRole } = useAuthStore((state) => state);
   const searchParams = useSearchParams();
   const page = Number(searchParams.get("page") || 1);
@@ -80,19 +81,21 @@ export default function AdminRolesPage() {
       case "actions":
         return (
           <div className="relative flex items-center gap-2">
-            <Tooltip color="warning" content="Edit">
-              <Button
-                isIconOnly
-                className="p-0 m-0"
-                href={`/admin/roles/${role.id}/edit`}
-                as={Link}
-                size="sm"
-                color="warning"
-                variant="solid"
-              >
-                <FaRegEdit />
-              </Button>
-            </Tooltip>
+            {role.name !== HASURA_ADMIN_ROLE && (
+              <Tooltip color="warning" content="Edit">
+                <Button
+                  isIconOnly
+                  className="p-0 m-0"
+                  href={`/admin/roles/${role.id}/edit`}
+                  as={Link}
+                  size="sm"
+                  color="warning"
+                  variant="solid"
+                >
+                  <FaRegEdit />
+                </Button>
+              </Tooltip>
+            )}
             {!defaultRoles.includes(role.name) && (
               <Tooltip color="danger" content="Delete">
                 <Button
