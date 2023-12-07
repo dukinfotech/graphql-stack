@@ -93,7 +93,7 @@ export default function AdminEditRolePage({
   };
 
   return (
-    <Card shadow="sm" fullWidth>
+    <Card shadow="sm" fullWidth isDisabled={fetching}>
       <CardHeader>
         <h4>Edit Role</h4>
       </CardHeader>
