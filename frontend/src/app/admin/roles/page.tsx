@@ -6,6 +6,11 @@ import PaginationTable, {
 import { Roles } from "@/gql/graphql";
 import { useMoment } from "@/hooks/useMoment";
 import { useAuthStore } from "@/stores/authStore";
+import {
+  HASURA_ADMIN_ROLE,
+  HASURA_MANAGER_ROLE,
+  HASURA_USER_ROLE,
+} from "@/utils/constants";
 import { gql, useLazyQuery, useMutation } from "@apollo/client";
 import { Button, Link, Tooltip } from "@nextui-org/react";
 import { useSearchParams } from "next/navigation";
@@ -36,13 +41,21 @@ const GET_LIST_ROLES = gql`
 
 const DELETE_ROLE = gql`
   mutation deleteRole($id: smallint!) {
-    update_roles_by_pk(pk_columns: { id: $id }, _set: { deleted_at: "now()" }) {
-      id
+    update_roles(
+      where: { id: { _eq: $id }, name: { _nin: ["admin", "manager", "user"] } }
+      _set: { deleted_at: "now()" }
+    ) {
+      affected_rows
     }
   }
 `;
 
 export default function AdminRolesPage() {
+  const defaultRoles = [
+    HASURA_ADMIN_ROLE,
+    HASURA_MANAGER_ROLE,
+    HASURA_USER_ROLE,
+  ];
   const { getPriorityRole } = useAuthStore((state) => state);
   const searchParams = useSearchParams();
   const page = Number(searchParams.get("page") || 1);
@@ -80,19 +93,21 @@ export default function AdminRolesPage() {
                 <FaRegEdit />
               </Button>
             </Tooltip>
-            <Tooltip color="danger" content="Delete">
-              <Button
-                isIconOnly
-                isLoading={deleting}
-                className="p-0 m-0"
-                size="sm"
-                color="danger"
-                variant="solid"
-                onClick={() => handleDelete(role.id)}
-              >
-                <FaRegTrashAlt />
-              </Button>
-            </Tooltip>
+            {!defaultRoles.includes(role.name) && (
+              <Tooltip color="danger" content="Delete">
+                <Button
+                  isIconOnly
+                  isLoading={deleting}
+                  className="p-0 m-0"
+                  size="sm"
+                  color="danger"
+                  variant="solid"
+                  onClick={() => handleDelete(role.id)}
+                >
+                  <FaRegTrashAlt />
+                </Button>
+              </Tooltip>
+            )}
           </div>
         );
       default:
