@@ -14,6 +14,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  */
 const documents = {
     "\n  query ListRoles($limit: Int!, $offset: Int!) {\n    roles(\n      where: { deleted_at: { _is_null: true } }\n      limit: $limit\n      offset: $offset\n      order_by: { id: asc }\n    ) {\n      id\n      name\n      created_at\n      updated_at\n      deleted_at\n    }\n    roles_aggregate {\n      aggregate {\n        count\n      }\n    }\n  }\n": types.ListRolesDocument,
+    "\n  mutation deleteRole($id: smallint!) {\n    update_roles_by_pk(\n      pk_columns: { id: $id }\n      _set: { deleted_at: \"now()\" }\n    ) {\n      id\n    }\n  }\n": types.DeleteRoleDocument,
     "\n  mutation Logout {\n    logout\n  }\n": types.LogoutDocument,
     "\n  query getSelf {\n    getSelf {\n      address\n      birthday\n      city\n      country\n      updatedAt\n      phone\n      lastName\n      id\n      firstName\n      district\n      createdAt\n      roles\n      permissions\n    }\n  }\n": types.GetSelfDocument,
     "\n  mutation Login($email: String!, $password: String!) {\n    login(loginInput: { email: $email, password: $password }) {\n      accessToken\n      refreshAccessToken\n      address\n      birthday\n      city\n      country\n      createdAt\n      district\n      firstName\n      id\n      lastName\n      phone\n      updatedAt\n      roles\n      permissions\n    }\n  }\n": types.LoginDocument,
@@ -38,6 +39,10 @@ export function graphql(source: string): unknown;
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  query ListRoles($limit: Int!, $offset: Int!) {\n    roles(\n      where: { deleted_at: { _is_null: true } }\n      limit: $limit\n      offset: $offset\n      order_by: { id: asc }\n    ) {\n      id\n      name\n      created_at\n      updated_at\n      deleted_at\n    }\n    roles_aggregate {\n      aggregate {\n        count\n      }\n    }\n  }\n"): (typeof documents)["\n  query ListRoles($limit: Int!, $offset: Int!) {\n    roles(\n      where: { deleted_at: { _is_null: true } }\n      limit: $limit\n      offset: $offset\n      order_by: { id: asc }\n    ) {\n      id\n      name\n      created_at\n      updated_at\n      deleted_at\n    }\n    roles_aggregate {\n      aggregate {\n        count\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation deleteRole($id: smallint!) {\n    update_roles_by_pk(\n      pk_columns: { id: $id }\n      _set: { deleted_at: \"now()\" }\n    ) {\n      id\n    }\n  }\n"): (typeof documents)["\n  mutation deleteRole($id: smallint!) {\n    update_roles_by_pk(\n      pk_columns: { id: $id }\n      _set: { deleted_at: \"now()\" }\n    ) {\n      id\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

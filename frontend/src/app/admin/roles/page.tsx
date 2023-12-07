@@ -1,5 +1,17 @@
 "use client";
 
+import PaginationTable, {
+  TypeColumn,
+} from "@/components/admin/table/PaginationTable";
+import { Roles } from "@/gql/graphql";
+import { useMoment } from "@/hooks/useMoment";
+import { HASURA_ADMIN_ROLE } from "@/utils/constants";
+import { gql, useLazyQuery, useMutation } from "@apollo/client";
+import { Button, Link, Tooltip } from "@nextui-org/react";
+import { useSearchParams } from "next/navigation";
+import { Key, useEffect, useState } from "react";
+import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
+
 const GET_LIST_ROLES = gql`
   query ListRoles($limit: Int!, $offset: Int!) {
     roles(
@@ -22,17 +34,16 @@ const GET_LIST_ROLES = gql`
   }
 `;
 
-import PaginationTable, {
-  TypeColumn,
-} from "@/components/admin/table/PaginationTable";
-import { Roles } from "@/gql/graphql";
-import { useMoment } from "@/hooks/useMoment";
-import { HASURA_ADMIN_ROLE } from "@/utils/constants";
-import { gql, useLazyQuery } from "@apollo/client";
-import { Button, Link, Tooltip } from "@nextui-org/react";
-import { useSearchParams } from "next/navigation";
-import { Key, useEffect, useState } from "react";
-import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
+const DELETE_ROLE = gql`
+  mutation deleteRole($id: smallint!) {
+    update_roles_by_pk(
+      pk_columns: { id: $id }
+      _set: { deleted_at: "now()" }
+    ) {
+      id
+    }
+  }
+`;
 
 export default function AdminRolesPage() {
   const searchParams = useSearchParams();
@@ -74,10 +85,12 @@ export default function AdminRolesPage() {
             <Tooltip color="danger" content="Delete">
               <Button
                 isIconOnly
+                isLoading={deleting}
                 className="p-0 m-0"
                 size="sm"
                 color="danger"
                 variant="solid"
+                onClick={() => handleDelete(role.id)}
               >
                 <FaRegTrashAlt />
               </Button>
@@ -89,13 +102,13 @@ export default function AdminRolesPage() {
     }
   };
 
-  const handleRowsPerPageChange = (limit: number) => {
-    fetchData(limit);
-  };
-
   // Graphql query hook
-  const [getListRoles, { data, loading }] = useLazyQuery<any>(GET_LIST_ROLES);
+  const [getListRoles, { data, loading: fetching }] =
+    useLazyQuery<any>(GET_LIST_ROLES);
 
+  const [deleteRole, { loading: deleting }] = useMutation<any>(DELETE_ROLE);
+
+  // Fetch data
   const fetchData = (limit: number) => {
     getListRoles({
       variables: {
@@ -121,14 +134,47 @@ export default function AdminRolesPage() {
     }
   }, [data]);
 
+  // Refetch data when limit change
+  const handleRowsPerPageChange = (limit: number) => {
+    fetchData(limit);
+  };
+
+  const handleDelete = (id: number) => {
+    console.log(id)
+    if (confirm("Are you sure want to delete this role?")) {
+      deleteRole({
+        variables: {
+          id: id,
+        },
+        context: {
+          headers: {
+            "x-hasura-role": HASURA_ADMIN_ROLE,
+          },
+        },
+        refetchQueries: [GET_LIST_ROLES],
+      });
+    }
+  };
+
   return (
-    <PaginationTable
-      loading={loading}
-      total={total}
-      columns={columns}
-      items={items}
-      renderCells={renderCells}
-      onRowsPerPageChange={handleRowsPerPageChange}
-    />
+    <>
+      <Button
+        className="mb-2"
+        href="/admin/roles/create"
+        as={Link}
+        color="primary"
+        variant="solid"
+      >
+        Create
+      </Button>
+      <PaginationTable
+        loading={fetching}
+        total={total}
+        columns={columns}
+        items={items}
+        renderCells={renderCells}
+        onRowsPerPageChange={handleRowsPerPageChange}
+      />
+    </>
   );
 }
