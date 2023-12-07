@@ -27,7 +27,8 @@ CREATE TABLE public.permissions (
     id smallint NOT NULL,
     name character varying(20) NOT NULL,
     value character varying(20) NOT NULL,
-    created_at timestamp with time zone DEFAULT now()
+    created_at timestamp with time zone DEFAULT now(),
+    updated_at timestamp with time zone DEFAULT now()
 );
 ALTER TABLE public.permissions ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
     SEQUENCE NAME public.permissions_id_seq

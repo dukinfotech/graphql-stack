@@ -3,9 +3,8 @@ import { Sidebar } from "./sidebar.styles";
 import { Avatar, Tooltip } from "@nextui-org/react";
 import { CompaniesDropdown } from "./companies-dropdown";
 import { HomeIcon } from "@/components/icons/sidebar/home-icon";
-import { PaymentsIcon } from "@/components/icons/sidebar/payments-icon";
 import { BalanceIcon } from "@/components/icons/sidebar/balance-icon";
-import { FaUsersGear } from "react-icons/fa6";
+import { FaShieldHalved, FaUsersGear } from "react-icons/fa6";
 import { CustomersIcon } from "@/components/icons/sidebar/customers-icon";
 import { ProductsIcon } from "@/components/icons/sidebar/products-icon";
 import { ReportsIcon } from "@/components/icons/sidebar/reports-icon";
@@ -47,15 +46,16 @@ export const SidebarWrapper = () => {
             />
             <SidebarMenu title="Main Menu">
               <SidebarItem
-                isActive={pathname === "/admin/roles"}
+                isActive={pathname.includes("/admin/roles")}
                 title="Roles"
                 icon={<FaUsersGear />}
                 href="/admin/roles"
               />
               <SidebarItem
-                isActive={pathname === "/payments"}
-                title="Payments"
-                icon={<PaymentsIcon />}
+                isActive={pathname.includes("/admin/permissions")}
+                title="Permissions"
+                icon={<FaShieldHalved />}
+                href="/admin/permissions"
               />
               <CollapseItems
                 icon={<BalanceIcon />}
