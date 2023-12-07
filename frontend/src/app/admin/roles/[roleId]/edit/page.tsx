@@ -1,5 +1,6 @@
 "use client";
 
+import MultiSelectPermission from "@/components/permissions/multi-select-permission";
 import { useAuthStore } from "@/stores/authStore";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import {
@@ -24,22 +25,37 @@ const GET_ROLE = gql`
       updated_at
       deleted_at
     }
+    role_permission(where: { role_id: { _eq: $id } }) {
+      role_id
+      permission_id
+    }
   }
 `;
 
 const UPDATE_ROLE = gql`
-  mutation updateRole($id: smallint!, $name: String!) {
+  mutation updateRole(
+    $id: smallint!
+    $name: String!
+    $objects: [role_permission_insert_input!]!
+  ) {
     update_roles_by_pk(
       pk_columns: { id: $id }
       _set: { name: $name, updated_at: "now()" }
     ) {
       id
     }
+    delete_role_permission(where: { role_id: { _eq: $id } }) {
+      affected_rows
+    }
+    insert_role_permission(objects: $objects) {
+      affected_rows
+    }
   }
 `;
 
 type EditRoleForm = {
-  name: string;
+  name?: string;
+  permissionIds: number[];
 };
 
 export default function AdminEditRolePage({
@@ -50,7 +66,10 @@ export default function AdminEditRolePage({
   const roleId = params.roleId;
   const { getPriorityRole } = useAuthStore((state) => state);
   const router = useRouter();
-  const [editRoleForm, setEditRoleForm] = useState<EditRoleForm>();
+  const [editRoleForm, setEditRoleForm] = useState<EditRoleForm>({
+    name: undefined,
+    permissionIds: [],
+  });
 
   const isNameInvalid = useMemo(() => {
     return editRoleForm && editRoleForm.name === "";
@@ -72,25 +91,37 @@ export default function AdminEditRolePage({
   useEffect(() => {
     if (getRoleData) {
       const _role = getRoleData.roles_by_pk;
-      setEditRoleForm({ ...editRoleForm, name: _role.name });
+      const _permissionIds = getRoleData.role_permission.map(
+        (rp: any) => rp.permission_id
+      );
+      setEditRoleForm({ name: _role.name, permissionIds: _permissionIds });
     }
   }, [getRoleData]);
 
   const handleUpdateRole = async () => {
-    if (editRoleForm) {
-      await updateRole({
-        variables: {
-          id: roleId,
-          name: editRoleForm.name,
+    const objects = editRoleForm.permissionIds.map((permissionId) => {
+      return {
+        role_id: roleId,
+        permission_id: permissionId,
+      };
+    });
+    await updateRole({
+      variables: {
+        id: roleId,
+        name: editRoleForm.name,
+        objects: objects,
+      },
+      context: {
+        headers: {
+          "x-hasura-role": getPriorityRole(),
         },
-        context: {
-          headers: {
-            "x-hasura-role": getPriorityRole(),
-          },
-        },
-      });
-      router.replace("/admin/roles");
-    }
+      },
+    });
+    router.replace("/admin/roles");
+  };
+
+  const handleSelectedIdsChange = (selectedPermissionIds: number[]) => {
+    setEditRoleForm({ ...editRoleForm, permissionIds: selectedPermissionIds });
   };
 
   return (
@@ -113,6 +144,11 @@ export default function AdminEditRolePage({
           isInvalid={isNameInvalid}
           color={isNameInvalid ? "danger" : "default"}
           errorMessage={isNameInvalid && "Please enter a valid name"}
+        />
+        <Spacer y={3} />
+        <MultiSelectPermission
+          defaultSelectedIds={editRoleForm.permissionIds}
+          onSelectedIdsChange={handleSelectedIdsChange}
         />
       </CardBody>
       <Divider />
