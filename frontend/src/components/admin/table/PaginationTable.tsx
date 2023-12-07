@@ -112,11 +112,11 @@ export default function PaginationTable({
   const topContent = useMemo(() => {
     return (
       <div className="flex justify-between items-center">
-        <span className="text-default-400 text-small">Total {total} items</span>
-        <label className="flex items-center text-default-400 text-small">
+        <span className="text-default-800 text-small">Total {total} items</span>
+        <label className="flex items-center text-default-800 text-small">
           Rows per page:
           <select
-            className="bg-transparent outline-none text-default-400 text-small"
+            className="bg-transparent outline-none text-default-800 text-small"
             onChange={handleChangeRowPerPage}
           >
             {rowsPerPageOptions.map((option) => (
@@ -132,7 +132,7 @@ export default function PaginationTable({
   const bottomContent = useMemo(() => {
     return (
       <div className="py-2 px-2 flex justify-between items-center">
-        <span className="w-[30%] text-small text-default-400">
+        <span className="w-[30%] text-small text-default-800">
           {selectedKeys === "all"
             ? "All items selected"
             : `${selectedKeys.size} of ${total} selected`}
@@ -175,9 +175,7 @@ export default function PaginationTable({
       selectionMode="multiple"
       onSelectionChange={setSelectedKeys}
       topContent={topContent}
-      topContentPlacement="outside"
       bottomContent={bottomContent}
-      bottomContentPlacement="outside"
     >
       <TableHeader columns={columns}>
         {(column) => (

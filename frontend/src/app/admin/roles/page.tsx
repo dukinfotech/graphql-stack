@@ -18,7 +18,7 @@ const GET_LIST_ROLES = gql`
       where: { deleted_at: { _is_null: true } }
       limit: $limit
       offset: $offset
-      order_by: { id: asc }
+      order_by: { created_at: desc }
     ) {
       id
       name
@@ -26,7 +26,7 @@ const GET_LIST_ROLES = gql`
       updated_at
       deleted_at
     }
-    roles_aggregate {
+    roles_aggregate(where: { deleted_at: { _is_null: true } }) {
       aggregate {
         count
       }
@@ -36,10 +36,7 @@ const GET_LIST_ROLES = gql`
 
 const DELETE_ROLE = gql`
   mutation deleteRole($id: smallint!) {
-    update_roles_by_pk(
-      pk_columns: { id: $id }
-      _set: { deleted_at: "now()" }
-    ) {
+    update_roles_by_pk(pk_columns: { id: $id }, _set: { deleted_at: "now()" }) {
       id
     }
   }
@@ -140,7 +137,7 @@ export default function AdminRolesPage() {
   };
 
   const handleDelete = (id: number) => {
-    console.log(id)
+    console.log(id);
     if (confirm("Are you sure want to delete this role?")) {
       deleteRole({
         variables: {
@@ -159,7 +156,7 @@ export default function AdminRolesPage() {
   return (
     <>
       <Button
-        className="mb-2"
+        className="mb-3"
         href="/admin/roles/create"
         as={Link}
         color="primary"
