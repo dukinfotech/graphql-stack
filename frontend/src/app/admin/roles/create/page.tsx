@@ -1,6 +1,6 @@
 "use client";
 
-import { HASURA_ADMIN_ROLE } from "@/utils/constants";
+import { useAuthStore } from "@/stores/authStore";
 import { gql, useMutation } from "@apollo/client";
 import {
   Button,
@@ -30,6 +30,7 @@ type CreateRoleForm = {
 };
 
 export default function AdminCreateRolePage() {
+  const { getPriorityRole } = useAuthStore();
   const router = useRouter();
   const [createRoleForm, setCreateRoleForm] = useState<CreateRoleForm>();
 
@@ -47,7 +48,7 @@ export default function AdminCreateRolePage() {
         },
         context: {
           headers: {
-            "x-hasura-role": HASURA_ADMIN_ROLE,
+            "x-hasura-role": getPriorityRole(),
           },
         },
       });

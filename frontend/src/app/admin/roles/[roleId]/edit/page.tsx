@@ -1,6 +1,6 @@
 "use client";
 
-import { HASURA_ADMIN_ROLE } from "@/utils/constants";
+import { useAuthStore } from "@/stores/authStore";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import {
   Button,
@@ -48,6 +48,7 @@ export default function AdminEditRolePage({
   params: { roleId: number };
 }) {
   const roleId = params.roleId;
+  const { getPriorityRole } = useAuthStore((state) => state);
   const router = useRouter();
   const [editRoleForm, setEditRoleForm] = useState<EditRoleForm>();
 
@@ -61,7 +62,7 @@ export default function AdminEditRolePage({
     },
     context: {
       headers: {
-        "x-hasura-role": HASURA_ADMIN_ROLE,
+        "x-hasura-role": getPriorityRole(),
       },
     },
   });
@@ -84,7 +85,7 @@ export default function AdminEditRolePage({
         },
         context: {
           headers: {
-            "x-hasura-role": HASURA_ADMIN_ROLE,
+            "x-hasura-role": getPriorityRole(),
           },
         },
       });

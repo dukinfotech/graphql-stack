@@ -5,7 +5,7 @@ import PaginationTable, {
 } from "@/components/admin/table/PaginationTable";
 import { Roles } from "@/gql/graphql";
 import { useMoment } from "@/hooks/useMoment";
-import { HASURA_ADMIN_ROLE } from "@/utils/constants";
+import { useAuthStore } from "@/stores/authStore";
 import { gql, useLazyQuery, useMutation } from "@apollo/client";
 import { Button, Link, Tooltip } from "@nextui-org/react";
 import { useSearchParams } from "next/navigation";
@@ -43,6 +43,7 @@ const DELETE_ROLE = gql`
 `;
 
 export default function AdminRolesPage() {
+  const { getPriorityRole } = useAuthStore((state) => state);
   const searchParams = useSearchParams();
   const page = Number(searchParams.get("page") || 1);
   const [total, setTotal] = useState<number>(0);
@@ -114,7 +115,7 @@ export default function AdminRolesPage() {
       },
       context: {
         headers: {
-          "x-hasura-role": HASURA_ADMIN_ROLE,
+          "x-hasura-role": getPriorityRole(),
         },
       },
     });
@@ -145,7 +146,7 @@ export default function AdminRolesPage() {
         },
         context: {
           headers: {
-            "x-hasura-role": HASURA_ADMIN_ROLE,
+            "x-hasura-role": getPriorityRole(),
           },
         },
         refetchQueries: [GET_LIST_ROLES],

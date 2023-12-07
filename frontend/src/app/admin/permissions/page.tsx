@@ -5,7 +5,7 @@ import PaginationTable, {
 } from "@/components/admin/table/PaginationTable";
 import { Permissions } from "@/gql/graphql";
 import { useMoment } from "@/hooks/useMoment";
-import { HASURA_ADMIN_ROLE } from "@/utils/constants";
+import { useAuthStore } from "@/stores/authStore";
 import { gql, useLazyQuery } from "@apollo/client";
 import { Button, Link, Tooltip } from "@nextui-org/react";
 import { useSearchParams } from "next/navigation";
@@ -34,6 +34,7 @@ const GET_LIST_PERMISSIONS = gql`
 `;
 
 export default function AdminPermissionsPage() {
+  const { getPriorityRole } = useAuthStore((state) => state);
   const searchParams = useSearchParams();
   const page = Number(searchParams.get("page") || 1);
   const [total, setTotal] = useState<number>(0);
@@ -91,7 +92,7 @@ export default function AdminPermissionsPage() {
       },
       context: {
         headers: {
-          "x-hasura-role": HASURA_ADMIN_ROLE,
+          "x-hasura-role": getPriorityRole(),
         },
       },
     });
